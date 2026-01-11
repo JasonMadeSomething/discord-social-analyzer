@@ -100,16 +100,22 @@ Show-Info "Starting Docker services..."
 try {
     if ($profiles.Count -gt 0) {
         $profileArgs = $profiles | ForEach-Object { "--profile"; $_ }
-        & docker compose $profileArgs up -d 2>&1 | Out-Null
+        $output = & docker compose $profileArgs up -d 2>&1
     } else {
-        & docker compose up -d 2>&1 | Out-Null
+        $output = & docker compose up -d 2>&1
     }
     
-    if ($LASTEXITCODE -ne 0) { throw "Docker Compose failed" }
+    if ($LASTEXITCODE -ne 0) { 
+        Write-Host $output -ForegroundColor Red
+        throw "Docker Compose failed with exit code $LASTEXITCODE"
+    }
     $script:cleanupRequired = $true
     Show-Success "Docker services started"
 } catch {
     Show-Error "Failed to start services: $_"
+    Write-Host ""
+    Write-Host "Try running manually to see the error:" -ForegroundColor Yellow
+    Write-Host "  docker compose --profile admin up -d" -ForegroundColor DarkGray
     exit 1
 }
 

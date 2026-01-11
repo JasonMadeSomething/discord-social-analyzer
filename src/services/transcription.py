@@ -95,11 +95,13 @@ class TranscriptionService:
         self,
         transcription_provider: ITranscriptionProvider,
         utterance_repo: UtteranceRepository,
-        session_manager: SessionManager
+        session_manager: SessionManager,
+        vector_service: 'VectorService' = None
     ):
         self.transcription_provider = transcription_provider
         self.utterance_repo = utterance_repo
         self.session_manager = session_manager
+        self.vector_service = vector_service
         
         # Audio buffers per user per channel
         self._buffers: Dict[int, Dict[int, AudioBuffer]] = defaultdict(dict)  # channel_id -> {user_id -> buffer}
@@ -220,6 +222,18 @@ class TranscriptionService:
                     f"{buffer.username}: \"{result.text[:50]}...\" "
                     f"({result.confidence:.2f} confidence)"
                 )
+                
+                # Store embedding in vector database (if enabled)
+                if self.vector_service:
+                    await self.vector_service.store_utterance(
+                        utterance_id=utterance_id,
+                        text=result.text,
+                        user_id=user_id,
+                        username=buffer.username,
+                        session_id=session_id,
+                        timestamp=started_at,
+                        confidence=result.confidence
+                    )
                 
             except Exception as e:
                 logger.error(f"Failed to process audio buffer: {e}", exc_info=True)

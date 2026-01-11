@@ -97,11 +97,38 @@ class Application:
             transcription_provider = WhisperProvider()
             logger.info("Using Whisper transcription provider")
         
+        # Vector database (Qdrant) for semantic search
+        vector_service = None
+        if settings.qdrant_enabled:
+            logger.info("Initializing vector database...")
+            try:
+                from src.providers.qdrant_provider import QdrantProvider
+                from src.providers.embedding_provider import SentenceTransformersProvider
+                from src.services.vector_service import VectorService
+                
+                embedding_provider = SentenceTransformersProvider()
+                vector_store = QdrantProvider(
+                    collection_name=settings.qdrant_collection,
+                    vector_size=embedding_provider.dimension
+                )
+                vector_service = VectorService(
+                    vector_store=vector_store,
+                    embedding_provider=embedding_provider
+                )
+                logger.info("Vector database initialized successfully")
+            except Exception as e:
+                logger.error(f"Failed to initialize vector database: {e}", exc_info=True)
+                logger.warning("Continuing without vector database features")
+                vector_service = None
+        else:
+            logger.info("Vector database disabled (set QDRANT_ENABLED=true to enable)")
+        
         session_manager = SessionManager(session_repo)
         transcription_service = TranscriptionService(
             transcription_provider=transcription_provider,
             utterance_repo=utterance_repo,
-            session_manager=session_manager
+            session_manager=session_manager,
+            vector_service=vector_service
         )
         
         # Analyzer service
@@ -147,6 +174,18 @@ class Application:
         bot.add_cog(commands_cog)
         bot.add_cog(advanced_commands_cog)
         bot.add_cog(deep_analysis_cog)
+        
+        # Add semantic search commands (if vector service is enabled)
+        if vector_service:
+            from src.bot.semantic_commands import SemanticCommands
+            semantic_commands_cog = SemanticCommands(
+                bot=bot,
+                vector_service=vector_service,
+                utterance_repo=utterance_repo,
+                session_repo=session_repo
+            )
+            bot.add_cog(semantic_commands_cog)
+            logger.info("Semantic commands enabled")
         
         self.bot = bot
         

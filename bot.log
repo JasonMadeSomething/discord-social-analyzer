@@ -3368,3 +3368,60 @@ AttributeError: '_MissingSentinel' object has no attribute 'close'
 2026-01-11 17:34:40,006 - src.bot.client - INFO - Stopped recording channel: General
 2026-01-11 17:34:40,007 - __main__ - INFO - Application shutdown complete
 2026-01-11 17:34:40,008 - __main__ - INFO - Shutdown requested
+2026-01-11 17:46:37,958 - __main__ - INFO - ======================================================================
+2026-01-11 17:46:37,958 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-11 17:46:37,958 - __main__ - INFO - ======================================================================
+2026-01-11 17:46:37,958 - __main__ - INFO - Transcription Provider: WHISPER
+2026-01-11 17:46:37,958 - __main__ - INFO - Whisper Model: large-v3
+2026-01-11 17:46:37,958 - __main__ - INFO - Whisper Device: cuda
+2026-01-11 17:46:37,958 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-11 17:46:37,958 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-11 17:46:37,958 - __main__ - INFO - Database: localhost:5432/discord_analyzer
+2026-01-11 17:46:37,958 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-11 17:46:37,958 - __main__ - INFO - Session Timeout: 300s
+2026-01-11 17:46:37,959 - __main__ - INFO - Log Level: INFO
+2026-01-11 17:46:37,959 - __main__ - INFO - Command Prefix: !
+2026-01-11 17:46:37,959 - __main__ - INFO - Features:
+2026-01-11 17:46:37,959 - __main__ - INFO -   - Transcription: True
+2026-01-11 17:46:37,959 - __main__ - INFO -   - Message Logging: True
+2026-01-11 17:46:37,959 - __main__ - INFO -   - Session Tracking: True
+2026-01-11 17:46:37,959 - __main__ - INFO - ======================================================================
+2026-01-11 17:46:37,960 - __main__ - INFO - Setting up database...
+2026-01-11 17:46:38,022 - __main__ - INFO - Database setup complete
+2026-01-11 17:46:38,022 - __main__ - INFO - Creating dependencies...
+2026-01-11 17:46:38,022 - src.providers.whisper_provider - INFO - Initializing Whisper model: large-v3 on cuda with float16
+2026-01-11 17:46:40,832 - src.providers.whisper_provider - INFO - Whisper model loaded successfully
+2026-01-11 17:46:40,832 - __main__ - INFO - Using Whisper transcription provider
+2026-01-11 17:46:40,832 - __main__ - INFO - Initializing vector database...
+2026-01-11 17:46:48,198 - src.providers.embedding_provider - INFO - Loading embedding model: all-MiniLM-L6-v2
+2026-01-11 17:46:48,198 - src.providers.embedding_provider - INFO - Using device: cuda
+2026-01-11 17:46:48,199 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-01-11 17:46:48,934 - huggingface_hub.file_download - WARNING - Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+2026-01-11 17:46:51,657 - src.providers.embedding_provider - INFO - Embedding model loaded: all-MiniLM-L6-v2 (dim=384)
+2026-01-11 17:46:51,739 - httpx - INFO - HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2026-01-11 17:46:51,746 - httpx - INFO - HTTP Request: GET http://localhost:6333/collections "HTTP/1.1 200 OK"
+2026-01-11 17:46:51,747 - src.providers.qdrant_provider - INFO - Creating Qdrant collection: utterances
+2026-01-11 17:46:51,911 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances "HTTP/1.1 200 OK"
+2026-01-11 17:46:51,911 - src.providers.qdrant_provider - INFO - Collection created: utterances
+2026-01-11 17:46:51,911 - src.providers.qdrant_provider - INFO - Qdrant provider initialized: localhost:6333/utterances
+2026-01-11 17:46:51,912 - src.services.vector_service - INFO - Vector service initialized and enabled
+2026-01-11 17:46:51,912 - __main__ - INFO - Vector database initialized successfully
+2026-01-11 17:46:51,913 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x0000026B0CD76D50>
+2026-01-11 17:46:51,914 - __main__ - ERROR - Error running application: The command topics is already an existing command or alias.
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\main.py", line 202, in run
+    bot = await self.create_dependencies()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\main.py", line 187, in create_dependencies
+    bot.add_cog(semantic_commands_cog)
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\cog.py", line 691, in add_cog
+    cog = cog._inject(self)
+          ^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\cog.py", line 599, in _inject
+    raise e
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\cog.py", line 593, in _inject
+    bot.add_command(command)
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\ext\commands\core.py", line 1283, in add_command
+    raise CommandRegistrationError(command.name)
+discord.ext.commands.errors.CommandRegistrationError: The command topics is already an existing command or alias.
+2026-01-11 17:46:51,916 - __main__ - INFO - Application shutdown complete
