@@ -130,9 +130,13 @@ class TranscriptionService:
         # Record activity in session
         self.session_manager.record_activity(channel_id)
         
-        # Check if buffer is ready for transcription
+        # Check if buffer is ready for transcription (reached chunk duration)
         if buffer.is_ready():
             logger.debug(f"Buffer ready for transcription for user {username} ({user_id}) - duration: {buffer.duration():.2f}s")
+            await self._process_buffer(channel_id, user_id)
+        # Also check if buffer is stale (silence detected)
+        elif buffer.is_stale():
+            logger.debug(f"Buffer is stale (silence detected) for user {username} ({user_id}) - duration: {buffer.duration():.2f}s")
             await self._process_buffer(channel_id, user_id)
         else:
             logger.debug(f"Buffer not ready yet for user {username} ({user_id}) - duration: {buffer.duration():.2f}s")
