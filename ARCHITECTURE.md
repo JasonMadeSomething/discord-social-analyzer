@@ -44,12 +44,12 @@
          ┌────────────────┼────────────────┐
          │                │                │
 ┌────────▼───────┐ ┌─────▼──────┐ ┌──────▼─────────┐
-│   Whisper      │ │ Repositories│ │   Providers    │
-│   Provider     │ │             │ │   (DI Layer)   │
-│  (faster-      │ │  - Session  │ │                │
-│   whisper)     │ │  - Utterance│ │ - Transcription│
+│ Transcription  │ │ Repositories│ │   Providers    │
+│   Providers    │ │             │ │   (DI Layer)   │
+│  - Whisper     │ │  - Session  │ │                │
+│  - Vosk        │ │  - Utterance│ │ - Transcription│
 │                │ │  - Message  │ │ - Vector DB    │
-│  - GPU Accel   │ │             │ │ - Embeddings   │
+│  - GPU/CPU     │ │             │ │ - Embeddings   │
 │  - VAD Filter  │ │             │ │ - LLM          │
 └────────────────┘ └─────┬──────┘ └────────────────┘
                          │
@@ -72,13 +72,15 @@
    ↓
 2. Bot captures audio stream (per user, separate streams)
    ↓
-3. Audio buffered in TranscriptionService (5 second chunks)
+3. Audio buffered in TranscriptionService
    ↓
-4. When buffer full or stale:
+4. When buffer ready (5s duration) OR stale (2s silence):
    - Convert audio to numpy array
-   - Send to Whisper provider
+   - Send to transcription provider (Whisper or Vosk)
    ↓
-5. Whisper transcribes with GPU acceleration
+5. Provider transcribes audio
+   - Whisper: GPU/CPU acceleration with VAD
+   - Vosk: Real-time CPU-friendly transcription
    - Returns text + confidence score
    ↓
 6. Store in database via UtteranceRepository
@@ -122,7 +124,8 @@ All components use interfaces (Abstract Base Classes) for dependencies:
 
 ```python
 ITranscriptionProvider
-├── WhisperProvider (current)
+├── WhisperProvider (GPU-accelerated, batch processing)
+├── VoskProvider (CPU-friendly, real-time)
 └── [Future: AzureProvider, GoogleProvider, etc.]
 
 IVectorStore
@@ -138,9 +141,9 @@ This allows swapping implementations without changing core logic.
 
 ## Key Design Decisions
 
-1. **Separate streams per user**: Discord provides separate audio streams, no need for speaker diarization
-2. **Local GPU transcription**: Using faster-whisper for speed and cost savings
-3. **Buffered transcription**: 5-second chunks balance latency vs overhead
+1. **Separate streams per user**: Discord (via Pycord) provides separate audio streams, no need for speaker diarization
+2. **Local transcription**: Using Whisper or Vosk for speed and cost savings
+3. **Dual-trigger buffering**: Transcribe on 5s chunks OR 2s silence for responsive real-time processing
 4. **Session-based organization**: Natural grouping for analysis
 5. **Repository pattern**: Clean separation between business logic and data access
-6. **Provider interfaces**: Easy to swap backends (e.g., different transcription services)
+6. **Provider interfaces**: Easy to swap backends (Whisper ↔ Vosk, or add cloud providers)

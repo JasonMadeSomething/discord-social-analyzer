@@ -162,11 +162,13 @@ How long to accumulate audio before transcribing.
 ### AUDIO_SILENCE_THRESHOLD
 **Default:** `2.0` seconds
 
-How long silence before considering an utterance complete.
+How long to wait after silence before processing the utterance.
 
-- Too low: Cuts off mid-sentence
-- Too high: Delays transcription
-- **2-3s is usually good**
+- **Lower (1.0-1.5s):** Faster response, may cut off speech
+- **Medium (2.0-2.5s):** Good balance ⭐ **Recommended**
+- **Higher (3.0-4.0s):** More complete utterances, slower response
+
+This allows transcription to happen when you stop speaking, not just when the buffer is full.
 
 ### AUDIO_MIN_DURATION
 **Default:** `0.5` seconds

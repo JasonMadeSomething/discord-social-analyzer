@@ -6,7 +6,7 @@ A production-ready Discord bot for analyzing social dynamics and conversation pa
 
 ## Key Features
 
-✅ **Real-time voice transcription** using faster-whisper with GPU acceleration
+✅ **Real-time voice transcription** using Whisper or Vosk (GPU or CPU)
 ✅ **Automatic session management** - tracks when channels fill and empty
 ✅ **Full attribution** - every utterance linked to user with precise timestamps
 ✅ **Text chat capture** - messages linked to voice sessions
@@ -18,8 +18,8 @@ A production-ready Discord bot for analyzing social dynamics and conversation pa
 
 **Core:**
 - Python 3.10+
-- discord.py (with voice support)
-- faster-whisper (GPU-accelerated transcription)
+- Pycord (discord.py fork with audio receive support)
+- faster-whisper OR Vosk (transcription providers)
 - PostgreSQL (data persistence)
 - SQLAlchemy (ORM)
 
@@ -57,8 +57,9 @@ discord-social-analyzer/
 
 ### 2. Dependency Injection
 All services use interfaces, making it easy to swap implementations:
-- Want Azure Speech instead of Whisper? Implement `ITranscriptionProvider`
-- Want Qdrant instead of PostgreSQL? Implement `IVectorStore`
+- Swap Whisper ↔ Vosk with one line in main.py
+- Want Azure Speech? Implement `ITranscriptionProvider`
+- Want Qdrant for vectors? Implement `IVectorStore`
 - Want Claude for analysis? Implement `ILLMProvider`
 
 ### 3. Async Throughout
@@ -180,7 +181,12 @@ With your hardware (RTX 4090, 128GB RAM):
 - `medium`: ~1.5s per 5s of audio
 - `large-v3`: ~3s per 5s of audio (best quality)
 
-**Recommended for production: `base` or `small`** for real-time performance with good quality.
+**Vosk Performance:**
+- True real-time processing (processes as fast as audio arrives)
+- Works well on CPU, no GPU required
+- Better accuracy for conversational speech
+
+**Recommended for production: Vosk** for best real-time performance, or Whisper `small`/`medium` for highest quality.
 
 **Database Performance:**
 - PostgreSQL can handle 10,000+ utterances/second on your hardware
@@ -195,21 +201,23 @@ With your hardware (RTX 4090, 128GB RAM):
 5. **.env.example** - Configuration template
 6. **main.py** - Application entry point
 7. **src/** - Complete source code with:
-   - Bot client with voice handling
-   - Transcription service with buffering
+   - Bot client with Pycord voice handling
+   - Transcription service with dual-trigger buffering
    - Session manager with lifecycle
    - All repositories (session, utterance, message)
-   - Whisper provider implementation
+   - Whisper and Vosk provider implementations
    - Command handlers
    - Database models
    - Configuration management
+8. **VOSK_SETUP.md** - Guide for setting up Vosk transcription
 
 ## Key Implementation Details
 
 ### Audio Processing
-- Discord provides separate audio streams per user (no speaker diarization needed!)
-- Audio buffered in 5-second chunks
-- Automatic flush on silence (2 seconds)
+- Pycord provides separate audio streams per user (no speaker diarization needed!)
+- Audio buffered with dual triggers:
+  - 5-second chunks (max duration)
+  - 2-second silence detection (for responsive real-time)
 - Proper cleanup on user disconnect
 
 ### Transcription
@@ -270,6 +278,6 @@ You now have a complete, production-ready Discord bot that:
 
 The DI-based design means you can easily swap providers (different transcription services, vector databases, LLMs) without touching core logic.
 
-Your RTX 4090 will make transcription incredibly fast - you could probably handle 10+ concurrent voice channels with the `base` model, or 2-3 channels with `large-v3` for maximum quality.
+Your RTX 4090 will make Whisper transcription incredibly fast - you could handle 10+ concurrent voice channels with the `small` model. With Vosk, you could handle 20+ channels even on CPU alone.
 
 Have fun analyzing conversation dynamics! 🎙️📊

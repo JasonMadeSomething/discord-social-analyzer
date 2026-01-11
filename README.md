@@ -4,7 +4,7 @@ A Discord bot that captures voice and text conversations to analyze social dynam
 
 ## Features
 
-- **Real-time voice transcription** using faster-whisper (GPU accelerated)
+- **Real-time voice transcription** using Whisper or Vosk (GPU accelerated or CPU)
 - **Session tracking** with automatic start/stop based on channel activity
 - **Full attribution** of utterances to users with timestamps
 - **Text message capture** linked to voice sessions
@@ -16,7 +16,7 @@ A Discord bot that captures voice and text conversations to analyze social dynam
 ```
 Discord Voice/Text → Bot → Services → Repositories → PostgreSQL
                             ↓
-                    Whisper (local GPU)
+                Whisper/Vosk (local transcription)
 ```
 
 ### Key Components
@@ -147,7 +147,7 @@ See **COMMANDS.md** for complete command reference with examples and interpretat
 ### How It Works
 
 1. **Automatic Session Detection**: When users join a voice channel, a session automatically starts
-2. **Real-time Transcription**: Audio is buffered and transcribed every ~5 seconds
+2. **Real-time Transcription**: Audio is buffered and transcribed every ~5 seconds OR when 2 seconds of silence is detected
 3. **Session End**: Sessions end when all users leave or after 5 minutes of inactivity
 4. **Data Storage**: All utterances, messages, and session data are stored with full attribution
 
@@ -157,7 +157,7 @@ See **COMMANDS.md** for complete command reference with examples and interpretat
 User joins voice channel
   → Bot joins and starts recording
   → Audio is captured per user
-  → Every 5 seconds, audio is transcribed via Whisper
+  → When you stop speaking (2s silence) or after 5s, audio is transcribed
   → Transcription stored with user ID, timestamp, confidence
   → Text messages are also captured and linked to the session
   
@@ -170,7 +170,9 @@ User types: !transcript
 
 ## Configuration
 
-### Whisper Models
+### Transcription Providers
+
+**Whisper** (default) - Good for clear speech, requires GPU for speed:
 
 | Model | Size | VRAM | Speed | Quality |
 |-------|------|------|-------|---------|
@@ -180,13 +182,24 @@ User types: !transcript
 | medium | 769M | ~5GB | Slower | High |
 | large-v3 | 1550M | ~10GB | Slowest | Highest |
 
-**Recommendation**: Start with `base` for testing, use `large-v3` for production.
+**Recommendation**: Start with `base` for testing, use `small` or `medium` for production.
+
+**Vosk** (alternative) - Better for real-time conversational speech:
+- Faster than Whisper (true real-time)
+- Works well on CPU
+- Better accuracy for natural conversation
+- See `VOSK_SETUP.md` for setup instructions
 
 ### Audio Settings
 
-- `AUDIO_CHUNK_DURATION`: How long to accumulate audio before transcribing (default: 5s)
+- `AUDIO_CHUNK_DURATION`: Maximum time to accumulate audio before transcribing (default: 5s)
   - Lower = more responsive but more overhead
   - Higher = less overhead but delayed transcription
+
+- `AUDIO_SILENCE_THRESHOLD`: Seconds of silence before processing utterance (default: 2s)
+  - Allows transcription to happen when you stop speaking, not just on chunk duration
+  - Lower = faster response, may cut off speech
+  - Higher = more complete utterances, slower response
   
 - `SESSION_TIMEOUT`: Seconds of inactivity before ending session (default: 300)
 
