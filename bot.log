@@ -2721,3 +2721,172 @@ discord.errors.ClientException: Already connected to a voice channel.
 2026-01-11 15:06:35,058 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-c-txhf",{"micros":78013,"calls":["id_created",{"micros":760,"calls":[]},"session_lookup_time",{"micros":185,"calls":[]},"session_lookup_finished",{"micros":12,"calls":[]},"discord-sessions-prd-2-143",{"micros":76762,"calls":["start_session",{"micros":71584,"calls":["discord-api-rpc-77cb85cc97-khzfl",{"micros":38575,"calls":["get_user",{"micros":5245},"get_guilds",{"micros":2985},"send_scheduled_deletion_message",{"micros":17},"guild_join_requests",{"micros":2},"authorized_ip_coro",{"micros":7},"pending_payments",{"micros":848},"apex_experiments",{"micros":27314},"user_activities",{"micros":4},"played_application_ids",{"micros":2},"linked_users",{"micros":2},"ad_personalization_toggles_disabled",{"micros":1}]}]},"starting_guild_connect",{"micros":29,"calls":[]},"presence_started",{"micros":355,"calls":[]},"guilds_started",{"micros":47,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":4661,"calls":[]},"connect_finished",{"micros":4680,"calls":[]},"build_ready",{"micros":13,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: bb0f7762a09812e5c31ebd787b590a63).
 2026-01-11 15:06:37,175 - src.bot.client - INFO - Logged in as SocialDynamics#8389 (ID: 1459972521469280401)
 2026-01-11 15:06:37,175 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-11 15:11:25,151 - src.bot.client - INFO - Shutting down bot...
+2026-01-11 15:11:25,154 - __main__ - INFO - Application shutdown complete
+2026-01-11 15:11:25,154 - __main__ - INFO - Shutdown requested
+2026-01-11 15:12:52,862 - __main__ - INFO - ======================================================================
+2026-01-11 15:12:52,862 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-11 15:12:52,863 - __main__ - INFO - ======================================================================
+2026-01-11 15:12:52,863 - __main__ - INFO - Whisper Model: medium
+2026-01-11 15:12:52,863 - __main__ - INFO - Whisper Device: cuda
+2026-01-11 15:12:52,863 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-11 15:12:52,863 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-11 15:12:52,863 - __main__ - INFO - Database: localhost:5432/discord_analyzer
+2026-01-11 15:12:52,863 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-11 15:12:52,863 - __main__ - INFO - Session Timeout: 300s
+2026-01-11 15:12:52,863 - __main__ - INFO - Log Level: INFO
+2026-01-11 15:12:52,863 - __main__ - INFO - Command Prefix: !
+2026-01-11 15:12:52,863 - __main__ - INFO - Features:
+2026-01-11 15:12:52,863 - __main__ - INFO -   - Transcription: True
+2026-01-11 15:12:52,863 - __main__ - INFO -   - Message Logging: True
+2026-01-11 15:12:52,864 - __main__ - INFO -   - Session Tracking: True
+2026-01-11 15:12:52,864 - __main__ - INFO - ======================================================================
+2026-01-11 15:12:52,864 - __main__ - INFO - Setting up database...
+2026-01-11 15:12:52,932 - __main__ - INFO - Database setup complete
+2026-01-11 15:12:52,932 - __main__ - INFO - Creating dependencies...
+2026-01-11 15:12:52,937 - src.providers.vosk_provider - INFO - Initializing Vosk model from: models/vosk-model-en-us-0.22
+2026-01-11 15:13:07,770 - src.providers.vosk_provider - INFO - Vosk model loaded successfully
+2026-01-11 15:13:07,771 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x000001DA1ACC7350>
+2026-01-11 15:13:07,771 - __main__ - ERROR - Error running application: Cog named 'AdvancedAnalysisCommands' already loaded
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\main.py", line 147, in run
+    bot = await self.create_dependencies()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\main.py", line 133, in create_dependencies
+    bot.add_cog(new_advanced_commands_cog)
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\cog.py", line 688, in add_cog
+    raise discord.ClientException(f"Cog named {cog_name!r} already loaded")
+discord.errors.ClientException: Cog named 'AdvancedAnalysisCommands' already loaded
+2026-01-11 15:13:07,772 - __main__ - INFO - Application shutdown complete
+2026-01-11 15:15:19,417 - __main__ - INFO - ======================================================================
+2026-01-11 15:15:19,417 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-11 15:15:19,417 - __main__ - INFO - ======================================================================
+2026-01-11 15:15:19,417 - __main__ - INFO - Whisper Model: medium
+2026-01-11 15:15:19,418 - __main__ - INFO - Whisper Device: cuda
+2026-01-11 15:15:19,418 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-11 15:15:19,418 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-11 15:15:19,418 - __main__ - INFO - Database: localhost:5432/discord_analyzer
+2026-01-11 15:15:19,418 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-11 15:15:19,418 - __main__ - INFO - Session Timeout: 300s
+2026-01-11 15:15:19,418 - __main__ - INFO - Log Level: INFO
+2026-01-11 15:15:19,418 - __main__ - INFO - Command Prefix: !
+2026-01-11 15:15:19,418 - __main__ - INFO - Features:
+2026-01-11 15:15:19,418 - __main__ - INFO -   - Transcription: True
+2026-01-11 15:15:19,418 - __main__ - INFO -   - Message Logging: True
+2026-01-11 15:15:19,418 - __main__ - INFO -   - Session Tracking: True
+2026-01-11 15:15:19,418 - __main__ - INFO - ======================================================================
+2026-01-11 15:15:19,419 - __main__ - INFO - Setting up database...
+2026-01-11 15:15:19,481 - __main__ - INFO - Database setup complete
+2026-01-11 15:15:19,481 - __main__ - INFO - Creating dependencies...
+2026-01-11 15:15:19,487 - src.providers.vosk_provider - INFO - Initializing Vosk model from: models/vosk-model-en-us-0.22
+2026-01-11 15:15:34,461 - src.providers.vosk_provider - INFO - Vosk model loaded successfully
+2026-01-11 15:15:34,462 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x00000200180BEA50>
+2026-01-11 15:15:34,463 - __main__ - INFO - Dependencies created
+2026-01-11 15:15:34,463 - __main__ - INFO - Starting bot...
+2026-01-11 15:15:34,463 - discord.client - INFO - logging in using static token
+2026-01-11 15:15:45,871 - discord.gateway - INFO - Shard ID None has sent the IDENTIFY payload.
+2026-01-11 15:15:46,049 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-d-53cq",{"micros":150742,"calls":["id_created",{"micros":925,"calls":[]},"session_lookup_time",{"micros":366,"calls":[]},"session_lookup_finished",{"micros":22,"calls":[]},"discord-sessions-prd-2-66",{"micros":148587,"calls":["start_session",{"micros":137367,"calls":["discord-api-rpc-77cb85cc97-44stz",{"micros":93760,"calls":["get_user",{"micros":28895},"get_guilds",{"micros":5602},"send_scheduled_deletion_message",{"micros":31},"guild_join_requests",{"micros":5},"authorized_ip_coro",{"micros":15},"pending_payments",{"micros":721},"apex_experiments",{"micros":34518},"user_activities",{"micros":7},"played_application_ids",{"micros":4},"linked_users",{"micros":4},"ad_personalization_toggles_disabled",{"micros":4}]}]},"starting_guild_connect",{"micros":30,"calls":[]},"presence_started",{"micros":2992,"calls":[]},"guilds_started",{"micros":79,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":8091,"calls":[]},"connect_finished",{"micros":8104,"calls":[]},"build_ready",{"micros":12,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: d0b2e5a3cc305d1e05bdecc13ff661d9).
+2026-01-11 15:15:48,164 - src.bot.client - INFO - Logged in as SocialDynamics#8389 (ID: 1459972521469280401)
+2026-01-11 15:15:48,164 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-11 15:16:13,501 - src.bot.client - INFO - Shutting down bot...
+2026-01-11 15:16:13,501 - __main__ - INFO - Application shutdown complete
+2026-01-11 15:16:13,502 - __main__ - INFO - Shutdown requested
+2026-01-11 15:17:00,126 - __main__ - INFO - ======================================================================
+2026-01-11 15:17:00,127 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-11 15:17:00,127 - __main__ - INFO - ======================================================================
+2026-01-11 15:17:00,127 - __main__ - INFO - Whisper Model: medium
+2026-01-11 15:17:00,127 - __main__ - INFO - Whisper Device: cuda
+2026-01-11 15:17:00,127 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-11 15:17:00,127 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-11 15:17:00,127 - __main__ - INFO - Database: localhost:5432/discord_analyzer
+2026-01-11 15:17:00,127 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-11 15:17:00,127 - __main__ - INFO - Session Timeout: 300s
+2026-01-11 15:17:00,127 - __main__ - INFO - Log Level: INFO
+2026-01-11 15:17:00,127 - __main__ - INFO - Command Prefix: !
+2026-01-11 15:17:00,127 - __main__ - INFO - Features:
+2026-01-11 15:17:00,127 - __main__ - INFO -   - Transcription: True
+2026-01-11 15:17:00,128 - __main__ - INFO -   - Message Logging: True
+2026-01-11 15:17:00,128 - __main__ - INFO -   - Session Tracking: True
+2026-01-11 15:17:00,128 - __main__ - INFO - ======================================================================
+2026-01-11 15:17:00,128 - __main__ - INFO - Setting up database...
+2026-01-11 15:17:00,192 - __main__ - INFO - Database setup complete
+2026-01-11 15:17:00,192 - __main__ - INFO - Creating dependencies...
+2026-01-11 15:17:00,198 - src.providers.vosk_provider - INFO - Initializing Vosk model from: models/vosk-model-en-us-0.22
+2026-01-11 15:17:15,131 - src.providers.vosk_provider - INFO - Vosk model loaded successfully
+2026-01-11 15:17:15,132 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x000001E3BD622410>
+2026-01-11 15:17:15,132 - __main__ - INFO - Dependencies created
+2026-01-11 15:17:15,132 - __main__ - INFO - Starting bot...
+2026-01-11 15:17:15,132 - discord.client - INFO - logging in using static token
+2026-01-11 15:17:15,479 - discord.gateway - INFO - Shard ID None has sent the IDENTIFY payload.
+2026-01-11 15:17:15,787 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-d-2b4x",{"micros":227534,"calls":["id_created",{"micros":488,"calls":[]},"session_lookup_time",{"micros":592,"calls":[]},"session_lookup_finished",{"micros":15,"calls":[]},"discord-sessions-prd-2-198",{"micros":225853,"calls":["start_session",{"micros":218074,"calls":["discord-api-rpc-77cb85cc97-mv6nx",{"micros":176560,"calls":["get_user",{"micros":82945},"get_guilds",{"micros":4587},"send_scheduled_deletion_message",{"micros":20},"guild_join_requests",{"micros":397},"authorized_ip_coro",{"micros":12},"pending_payments",{"micros":646},"apex_experiments",{"micros":32266},"user_activities",{"micros":6},"played_application_ids",{"micros":3},"linked_users",{"micros":3},"ad_personalization_toggles_disabled",{"micros":3}]}]},"starting_guild_connect",{"micros":31,"calls":[]},"presence_started",{"micros":2353,"calls":[]},"guilds_started",{"micros":85,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":5242,"calls":[]},"connect_finished",{"micros":5256,"calls":[]},"build_ready",{"micros":12,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: b5d87449f86d24c993e395e91f0c2142).
+2026-01-11 15:17:17,922 - src.bot.client - INFO - Logged in as SocialDynamics#8389 (ID: 1459972521469280401)
+2026-01-11 15:17:17,922 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-11 15:20:40,033 - src.bot.client - INFO - Shutting down bot...
+2026-01-11 15:20:40,034 - __main__ - INFO - Application shutdown complete
+2026-01-11 15:20:40,035 - __main__ - INFO - Shutdown requested
+2026-01-11 15:20:44,134 - __main__ - INFO - ======================================================================
+2026-01-11 15:20:44,135 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-11 15:20:44,135 - __main__ - INFO - ======================================================================
+2026-01-11 15:20:44,135 - __main__ - INFO - Whisper Model: medium
+2026-01-11 15:20:44,135 - __main__ - INFO - Whisper Device: cuda
+2026-01-11 15:20:44,135 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-11 15:20:44,135 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-11 15:20:44,135 - __main__ - INFO - Database: localhost:5432/discord_analyzer
+2026-01-11 15:20:44,135 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-11 15:20:44,135 - __main__ - INFO - Session Timeout: 300s
+2026-01-11 15:20:44,135 - __main__ - INFO - Log Level: INFO
+2026-01-11 15:20:44,136 - __main__ - INFO - Command Prefix: !
+2026-01-11 15:20:44,136 - __main__ - INFO - Features:
+2026-01-11 15:20:44,136 - __main__ - INFO -   - Transcription: True
+2026-01-11 15:20:44,136 - __main__ - INFO -   - Message Logging: True
+2026-01-11 15:20:44,136 - __main__ - INFO -   - Session Tracking: True
+2026-01-11 15:20:44,136 - __main__ - INFO - ======================================================================
+2026-01-11 15:20:44,137 - __main__ - INFO - Setting up database...
+2026-01-11 15:20:44,314 - __main__ - INFO - Database setup complete
+2026-01-11 15:20:44,314 - __main__ - INFO - Creating dependencies...
+2026-01-11 15:20:44,319 - src.providers.vosk_provider - INFO - Initializing Vosk model from: models/vosk-model-en-us-0.22
+2026-01-11 15:20:59,337 - src.providers.vosk_provider - INFO - Vosk model loaded successfully
+2026-01-11 15:20:59,339 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x000001DA79B28D50>
+2026-01-11 15:20:59,339 - __main__ - INFO - Dependencies created
+2026-01-11 15:20:59,339 - __main__ - INFO - Starting bot...
+2026-01-11 15:20:59,339 - discord.client - INFO - logging in using static token
+2026-01-11 15:21:10,778 - discord.gateway - INFO - Shard ID None has sent the IDENTIFY payload.
+2026-01-11 15:21:10,952 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-c-hbcg",{"micros":148366,"calls":["id_created",{"micros":632,"calls":[]},"session_lookup_time",{"micros":242,"calls":[]},"session_lookup_finished",{"micros":14,"calls":[]},"discord-sessions-prd-2-23",{"micros":147167,"calls":["start_session",{"micros":142456,"calls":["discord-api-rpc-77cb85cc97-zdzgc",{"micros":108594,"calls":["get_user",{"micros":7892},"get_guilds",{"micros":10865},"send_scheduled_deletion_message",{"micros":14},"guild_join_requests",{"micros":2600},"authorized_ip_coro",{"micros":12},"pending_payments",{"micros":631},"apex_experiments",{"micros":26345},"user_activities",{"micros":5},"played_application_ids",{"micros":3},"linked_users",{"micros":2},"ad_personalization_toggles_disabled",{"micros":2}]}]},"starting_guild_connect",{"micros":27,"calls":[]},"presence_started",{"micros":1993,"calls":[]},"guilds_started",{"micros":58,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":2606,"calls":[]},"connect_finished",{"micros":2617,"calls":[]},"build_ready",{"micros":12,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 733fc1f9c29c13fb0aa06edbddcd14ef).
+2026-01-11 15:21:13,068 - src.bot.client - INFO - Logged in as SocialDynamics#8389 (ID: 1459972521469280401)
+2026-01-11 15:21:13,068 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-11 15:21:37,781 - src.bot.client - INFO - Shutting down bot...
+2026-01-11 15:21:37,782 - __main__ - INFO - Application shutdown complete
+2026-01-11 15:21:37,783 - __main__ - INFO - Shutdown requested
+2026-01-11 16:19:10,580 - __main__ - INFO - ======================================================================
+2026-01-11 16:19:10,580 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-11 16:19:10,581 - __main__ - INFO - ======================================================================
+2026-01-11 16:19:10,581 - __main__ - INFO - Whisper Model: medium
+2026-01-11 16:19:10,581 - __main__ - INFO - Whisper Device: cuda
+2026-01-11 16:19:10,581 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-11 16:19:10,582 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-11 16:19:10,582 - __main__ - INFO - Database: localhost:5432/discord_analyzer
+2026-01-11 16:19:10,582 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-11 16:19:10,582 - __main__ - INFO - Session Timeout: 300s
+2026-01-11 16:19:10,582 - __main__ - INFO - Log Level: INFO
+2026-01-11 16:19:10,582 - __main__ - INFO - Command Prefix: !
+2026-01-11 16:19:10,582 - __main__ - INFO - Features:
+2026-01-11 16:19:10,582 - __main__ - INFO -   - Transcription: True
+2026-01-11 16:19:10,582 - __main__ - INFO -   - Message Logging: True
+2026-01-11 16:19:10,582 - __main__ - INFO -   - Session Tracking: True
+2026-01-11 16:19:10,582 - __main__ - INFO - ======================================================================
+2026-01-11 16:19:10,583 - __main__ - INFO - Setting up database...
+2026-01-11 16:19:10,642 - __main__ - INFO - Database setup complete
+2026-01-11 16:19:10,642 - __main__ - INFO - Creating dependencies...
+2026-01-11 16:19:10,648 - src.providers.vosk_provider - INFO - Initializing Vosk model from: models/vosk-model-en-us-0.22
+2026-01-11 16:19:27,777 - src.providers.vosk_provider - INFO - Vosk model loaded successfully
+2026-01-11 16:19:27,778 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x000002813069BC90>
+2026-01-11 16:19:27,779 - __main__ - INFO - Dependencies created
+2026-01-11 16:19:27,779 - __main__ - INFO - Starting bot...
+2026-01-11 16:19:27,779 - discord.client - INFO - logging in using static token
+2026-01-11 16:19:40,136 - discord.gateway - INFO - Shard ID None has sent the IDENTIFY payload.
+2026-01-11 16:19:40,354 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-c-ft41",{"micros":185925,"calls":["id_created",{"micros":620,"calls":[]},"session_lookup_time",{"micros":1242,"calls":[]},"session_lookup_finished",{"micros":9,"calls":[]},"discord-sessions-prd-2-23",{"micros":183333,"calls":["start_session",{"micros":167374,"calls":["discord-api-rpc-77cb85cc97-svjrb",{"micros":137310,"calls":["get_user",{"micros":10575},"get_guilds",{"micros":52136},"send_scheduled_deletion_message",{"micros":11},"guild_join_requests",{"micros":4746},"authorized_ip_coro",{"micros":9},"pending_payments",{"micros":427},"apex_experiments",{"micros":23372},"user_activities",{"micros":12},"played_application_ids",{"micros":3},"linked_users",{"micros":3},"ad_personalization_toggles_disabled",{"micros":3}]}]},"starting_guild_connect",{"micros":30,"calls":[]},"presence_started",{"micros":2425,"calls":[]},"guilds_started",{"micros":52,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":13425,"calls":[]},"connect_finished",{"micros":13438,"calls":[]},"build_ready",{"micros":11,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 4e69481813c3b61090901d834f3c8bc1).
+2026-01-11 16:19:42,481 - src.bot.client - INFO - Logged in as CreepyBot#8389 (ID: 1459972521469280401)
+2026-01-11 16:19:42,482 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-11 16:44:16,960 - src.bot.client - INFO - Shutting down bot...
+2026-01-11 16:44:16,961 - __main__ - INFO - Application shutdown complete
+2026-01-11 16:44:16,961 - __main__ - INFO - Shutdown requested

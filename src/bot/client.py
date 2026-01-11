@@ -201,6 +201,11 @@ class DiscordBot(commands.Bot):
         """Handle user joining a voice channel."""
         logger.info(f"{member.name} joined {channel.name}")
         
+        # Skip if it's the bot itself
+        if member.id == self.user.id:
+            logger.info("Bot joined channel, not adding as participant")
+            return
+        
         # Get or create session
         session_id = self.session_manager.get_active_session(channel.id)
         if not session_id:
@@ -210,7 +215,7 @@ class DiscordBot(commands.Bot):
                 guild_id=channel.guild.id
             )
         
-        # Add participant
+        # Add participant (bot is already filtered out above)
         self.session_manager.add_participant(
             channel_id=channel.id,
             user_id=member.id,

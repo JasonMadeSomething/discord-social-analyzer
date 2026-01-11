@@ -16,6 +16,7 @@ from src.services.analyzer import ConversationAnalyzer
 from src.bot.client import DiscordBot
 from src.bot.commands import AnalysisCommands
 from src.bot.analysis_commands import AdvancedAnalysisCommands
+from src.bot.advanced_commands import DeepAnalysisCommands
 
 # Setup logging
 logging.basicConfig(
@@ -120,9 +121,16 @@ class Application:
             session_repo=session_repo
         )
         
+        deep_analysis_cog = DeepAnalysisCommands(
+            bot=bot,
+            analyzer=analyzer,
+            session_repo=session_repo
+        )
+        
         # In Pycord, add_cog is not async
         bot.add_cog(commands_cog)
         bot.add_cog(advanced_commands_cog)
+        bot.add_cog(deep_analysis_cog)
         
         self.bot = bot
         

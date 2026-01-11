@@ -229,11 +229,25 @@ class AnalysisCommands(commands.Cog):
             await ctx.send(f"Error searching: {str(e)}")
     
     @commands.command(name='sessions')
-    async def list_sessions(self, ctx: commands.Context, limit: int = 10):
+    async def list_sessions(self, ctx: commands.Context, *args):
         """
         List recent sessions.
-        Usage: !sessions [limit]
+        Usage: !sessions [limit] [--summary]
+        Add --summary flag to show session titles/recaps
         """
+        # Parse arguments
+        limit = 10  # Default
+        show_summary = False
+        
+        for arg in args:
+            if arg == '--summary':
+                show_summary = True
+            else:
+                try:
+                    limit = int(arg)
+                except ValueError:
+                    await ctx.send(f"Invalid argument: {arg}. Use: !sessions [limit] [--summary]")
+                    return
         try:
             # Get all sessions from voice channels
             all_sessions = []
@@ -259,12 +273,20 @@ class AnalysisCommands(commands.Cog):
                 duration = f"{session.duration / 60:.1f} min" if session.duration else "Ongoing"
                 status_emoji = "🟢" if session.status.value == "active" else "⚫"
                 
+                # Generate session title/summary if requested
+                session_title = ""
+                if show_summary:
+                    session_title = self._generate_session_title(session.session_id)
+                    if session_title:
+                        session_title = f"\n**Topic:** {session_title}"
+                
                 embed.add_field(
                     name=f"{i}. {session.channel_name} {status_emoji}",
                     value=(
                         f"Started: {session.started_at.strftime('%Y-%m-%d %H:%M')}\n"
                         f"Duration: {duration}\n"
                         f"Participants: {len(session.participants)}"
+                        f"{session_title}"
                     ),
                     inline=False
                 )
@@ -274,6 +296,45 @@ class AnalysisCommands(commands.Cog):
         except Exception as e:
             logger.error(f"Error in sessions command: {e}", exc_info=True)
             await ctx.send(f"Error listing sessions: {str(e)}")
+    
+    def _generate_session_title(self, session_id: str) -> str:
+        """Generate a brief title/summary for a session based on top keywords."""
+        try:
+            utterances = self.utterance_repo.get_utterances_by_session(session_id)
+            
+            if not utterances or len(utterances) < 3:
+                return "Brief conversation"
+            
+            # Extract top keywords
+            from collections import Counter
+            stopwords = {
+                'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
+                'of', 'with', 'is', 'was', 'are', 'were', 'been', 'be', 'have', 'has',
+                'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'can',
+                'i', 'you', 'he', 'she', 'it', 'we', 'they', 'this', 'that', 'my',
+                'your', 'um', 'uh', 'oh', 'okay', 'ok', 'well', 'like', 'yeah', 'just'
+            }
+            
+            word_counts = Counter()
+            for utt in utterances:
+                words = utt.text.lower().split()
+                for word in words:
+                    word = word.strip('.,!?;:"\'()[]{}').lower()
+                    if len(word) > 3 and word not in stopwords and word.isalpha():
+                        word_counts[word] += 1
+            
+            # Get top 3 keywords
+            top_keywords = [word for word, _ in word_counts.most_common(3)]
+            
+            if not top_keywords:
+                return "General discussion"
+            
+            # Create title from keywords
+            return ", ".join(top_keywords).title()
+            
+        except Exception as e:
+            logger.error(f"Error generating session title: {e}")
+            return "Discussion"
     
     @commands.command(name='help_analyzer')
     async def help_command(self, ctx: commands.Context):

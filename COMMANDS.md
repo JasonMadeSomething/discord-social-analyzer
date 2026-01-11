@@ -54,13 +54,14 @@ Search utterances by text content.
 
 ---
 
-### !sessions [limit]
+### !sessions [limit] [--summary]
 List recent sessions.
 
 **Example:**
 ```
 !sessions
 !sessions 20
+!sessions 10 --summary
 ```
 
 **Output:**
@@ -68,6 +69,12 @@ List recent sessions.
 - Duration
 - Participant counts
 - Status (active/ended)
+- **With --summary flag**: Shows topic keywords for each session to help recall what was discussed
+
+**Use the --summary flag to:**
+- Quickly identify which session you want to analyze
+- See what each conversation was about at a glance
+- Recall sessions by topic instead of just number
 
 ---
 
@@ -226,6 +233,109 @@ Export full analysis as JSON file.
 
 ---
 
+### !topics [session_number] [num_topics]
+Identify conversation topics using keyword clustering.
+
+**Example:**
+```
+!topics
+!topics 1 5
+!topics 2 3
+```
+
+**Output:**
+- Topic clusters with related keywords
+- Frequency of each topic
+- Example utterances for each topic
+- Primary keyword per topic
+
+**Insights:**
+- What were the main discussion themes?
+- How did topics relate to each other?
+- Which topics dominated the conversation?
+
+---
+
+### !recap [session_number]
+Generate a structured recap of the conversation.
+
+**Example:**
+```
+!recap
+!recap 1
+```
+
+**Output:**
+- Timeline of conversation (5-minute segments)
+- Key moments (high activity periods)
+- Highlights (longest/clearest utterances)
+- Participant summaries
+- Topics discussed per time segment
+
+**Insights:**
+- How did the conversation evolve over time?
+- When were the most engaging moments?
+- What did each participant contribute?
+
+---
+
+### !dynamics [session_number]
+Analyze social dynamics and conversation flow.
+
+**Example:**
+```
+!dynamics
+!dynamics 2
+```
+
+**Output:**
+- Participant roles (Leader, Active Participant, Responder, etc.)
+- Conversation flow patterns (who talks to whom)
+- Engagement metrics (gaps, speaker diversity)
+- Overall engagement score
+
+**Insights:**
+- Who plays what role in the conversation?
+- How does conversation flow between participants?
+- How engaged was the group overall?
+
+**Roles Explained:**
+- **Leader**: Dominates conversation (>40% participation)
+- **Active Participant**: Highly engaged (25-40%)
+- **Contributor**: Balanced participation (10-25%)
+- **Responder**: Primarily responds to others
+- **Observer**: Limited participation (<10%)
+
+---
+
+### !influence [session_number]
+Show influence scores - who drives the conversation.
+
+**Example:**
+```
+!influence
+!influence 1
+```
+
+**Output:**
+- Ranked list of participants by influence
+- Influence scores (calculated metric)
+- Responses triggered by each person
+- Average response time to each person
+- Speaking time triggered
+
+**Insights:**
+- Who drives the conversation forward?
+- Whose comments get the most responses?
+- Who generates the most discussion?
+
+**How Influence is Calculated:**
+- More responses from others = higher influence
+- Faster responses = higher influence
+- More speaking time triggered = higher influence
+
+---
+
 ### !help_analyzer
 Show command help and usage.
 
@@ -310,13 +420,12 @@ Extracted using word frequency after filtering:
 
 ## Future Commands (Planned)
 
-- `!compare <session1> <session2>` - Compare two sessions
-- `!sentiment [session_number]` - Sentiment analysis
-- `!topics [session_number]` - Advanced topic clustering
-- `!graph [session_number]` - Generate social interaction graph
+- `!compare <session1> <session2>` - Compare two sessions side-by-side
+- `!sentiment [session_number]` - Sentiment analysis (requires LLM provider)
+- `!graph [session_number]` - Generate visual social interaction graph
 - `!report <start_date> <end_date>` - Generate time-range report
-- `!influence [session_number]` - Calculate influence scores
-- `!summary [session_number]` - AI-generated summary (needs LLM provider)
+- `!summary [session_number]` - AI-generated natural language summary (requires LLM provider)
+- `!predict [session_number]` - Predict conversation outcomes based on patterns
 
 ## Questions?
 
