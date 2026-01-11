@@ -24,13 +24,28 @@ class AudioBuffer:
         self.started_at: Optional[datetime] = None
         self.last_audio_at: Optional[datetime] = None
     
-    def add_audio(self, audio: np.ndarray) -> None:
-        """Add audio chunk to buffer."""
+    def add_audio(self, audio: np.ndarray, vad_threshold: float = 0.01) -> None:
+        """
+        Add audio chunk to buffer with voice activity detection.
+        
+        Args:
+            audio: Audio data to add
+            vad_threshold: RMS threshold for voice activity detection (default: 0.01)
+        """
         if not self.started_at:
             self.started_at = datetime.utcnow()
         
         self.audio_data.append(audio)
-        self.last_audio_at = datetime.utcnow()
+        
+        # Only update timestamp if audio contains actual speech
+        # Calculate RMS (root mean square) to detect voice activity
+        rms = np.sqrt(np.mean(audio ** 2))
+        
+        if rms > vad_threshold:
+            # Audio contains speech, update timestamp
+            self.last_audio_at = datetime.utcnow()
+        # If RMS is below threshold, don't update timestamp
+        # This allows silence detection to work properly
     
     def get_combined_audio(self) -> np.ndarray:
         """Combine all audio chunks into single array."""

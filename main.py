@@ -3,6 +3,7 @@ import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 import sys
+import argparse
 
 from src.config import settings
 from src.models.database import Base
@@ -19,25 +20,32 @@ from src.bot.analysis_commands import AdvancedAnalysisCommands
 from src.bot.advanced_commands import DeepAnalysisCommands
 
 # Setup logging
+# Configure logging with UTF-8 encoding for Windows compatibility
+stream_handler = logging.StreamHandler(sys.stdout)
+stream_handler.setLevel(getattr(logging, settings.log_level))
+stream_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+
+# Use UTF-8 encoding for file handler to support Unicode characters
+file_handler = logging.FileHandler('bot.log', encoding='utf-8')
+file_handler.setLevel(getattr(logging, settings.log_level))
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+
 logging.basicConfig(
     level=getattr(logging, settings.log_level),
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler('bot.log')
-    ]
+    handlers=[stream_handler, file_handler]
 )
 
 logger = logging.getLogger(__name__)
 
 
 class Application:
-    """Main application that wires up all dependencies."""
+    """Main application class."""
     
-    def __init__(self):
-        self.engine = None
-        self.Session = None
+    def __init__(self, provider_choice: str = 'whisper'):
         self.bot = None
+        self.provider_choice = provider_choice.lower()
+        self.Session = None
+        self.engine = None
     
     def setup_database(self):
         """Initialize database connection and create tables."""
@@ -71,15 +79,23 @@ class Application:
         message_repo = MessageRepository(self.Session)
         
         # Services
-        # Choose transcription provider:
-        # Option 1: Whisper (slower, less accurate for real-time)
-        # transcription_provider = WhisperProvider()
+        # Dynamically select transcription provider based on environment variable or startup argument
+        import os
+        use_vosk = os.getenv('USE_VOSK', '').lower() in ('true', '1', 'yes')
         
-        # Option 2: Vosk (faster, better for real-time)
-        # Requires: pip install vosk
-        # Download model from: https://alphacephei.com/vosk/models
-        from src.providers.vosk_provider import VoskProvider
-        transcription_provider = VoskProvider()
+        # Allow command-line argument to override environment variable
+        if self.provider_choice == 'vosk':
+            use_vosk = True
+        elif self.provider_choice == 'whisper':
+            use_vosk = False
+        
+        if use_vosk:
+            from src.providers.vosk_provider import VoskProvider
+            transcription_provider = VoskProvider()
+            logger.info("Using Vosk transcription provider")
+        else:
+            transcription_provider = WhisperProvider()
+            logger.info("Using Whisper transcription provider")
         
         session_manager = SessionManager(session_repo)
         transcription_service = TranscriptionService(
@@ -170,15 +186,44 @@ class Application:
 
 def main():
     """Main entry point."""
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(
+        description='Discord Social Analyzer - Transcribe and analyze voice conversations',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Transcription Providers:
+  whisper  - OpenAI Whisper (high accuracy, slower, GPU recommended)
+  vosk     - Vosk (fast, CPU-friendly, good for real-time)
+
+Examples:
+  python main.py --provider whisper
+  python main.py --provider vosk
+  python main.py  (defaults to whisper)
+        """
+    )
+    parser.add_argument(
+        '--provider',
+        type=str,
+        choices=['whisper', 'vosk'],
+        default='whisper',
+        help='Transcription provider to use (default: whisper)'
+    )
+    
+    args = parser.parse_args()
+    
     logger.info("=" * 70)
     logger.info("Discord Social Analyzer Starting")
     logger.info("=" * 70)
+    logger.info(f"Transcription Provider: {args.provider.upper()}")
     
     # Show configuration
-    logger.info(f"Whisper Model: {settings.whisper_model}")
-    logger.info(f"Whisper Device: {settings.whisper_device}")
-    logger.info(f"Whisper Compute Type: {settings.whisper_compute_type}")
-    logger.info(f"Whisper VAD Enabled: {settings.whisper_vad_enabled}")
+    if args.provider == 'whisper':
+        logger.info(f"Whisper Model: {settings.whisper_model}")
+        logger.info(f"Whisper Device: {settings.whisper_device}")
+        logger.info(f"Whisper Compute Type: {settings.whisper_compute_type}")
+        logger.info(f"Whisper VAD Enabled: {settings.whisper_vad_enabled}")
+    else:
+        logger.info(f"Vosk Model Path: {settings.vosk_model_path}")
     logger.info(f"Database: {settings.get_database_url().split('@')[1] if '@' in settings.get_database_url() else settings.get_database_url()}")
     logger.info(f"Audio Chunk Duration: {settings.audio_chunk_duration}s")
     logger.info(f"Session Timeout: {settings.session_timeout}s")
@@ -201,7 +246,7 @@ def main():
     
     logger.info("=" * 70)
     
-    app = Application()
+    app = Application(provider_choice=args.provider)
     
     try:
         asyncio.run(app.run())

@@ -64,6 +64,12 @@ class WhisperProvider(ITranscriptionProvider):
             TranscriptionResult with transcribed text and metadata
         """
         try:
+            # Resample to 16kHz if needed (Whisper expects 16kHz)
+            if sample_rate != 16000:
+                logger.debug(f"Resampling audio from {sample_rate}Hz to 16000Hz")
+                audio_data = self._resample(audio_data, sample_rate, 16000)
+                sample_rate = 16000
+            
             # faster-whisper expects float32 mono audio
             if audio_data.dtype != np.float32:
                 audio_data = audio_data.astype(np.float32)
@@ -76,10 +82,11 @@ class WhisperProvider(ITranscriptionProvider):
             if np.abs(audio_data).max() > 1.0:
                 audio_data = audio_data / np.abs(audio_data).max()
             
-            # Transcribe
+            # Transcribe with language hint to improve accuracy
             segments, info = self.model.transcribe(
                 audio_data,
                 beam_size=5,
+                language='en',  # Force English to prevent misdetection
                 vad_filter=settings.whisper_vad_enabled,
                 vad_parameters=dict(
                     min_silence_duration_ms=settings.whisper_vad_min_silence_ms
@@ -88,19 +95,19 @@ class WhisperProvider(ITranscriptionProvider):
             
             # Collect all segments
             text_segments = []
-            total_confidence = 0.0
-            segment_count = 0
+            confidences = []
             
             for segment in segments:
                 text_segments.append(segment.text.strip())
-                total_confidence += segment.avg_logprob
-                segment_count += 1
+                # Convert log probability to linear probability for each segment
+                segment_confidence = np.exp(segment.avg_logprob)
+                confidences.append(segment_confidence)
             
             # Combine text
             full_text = " ".join(text_segments).strip()
             
-            # Calculate average confidence (convert log prob to probability)
-            avg_confidence = np.exp(total_confidence / segment_count) if segment_count > 0 else 0.0
+            # Calculate average confidence (mean of linear probabilities)
+            avg_confidence = np.mean(confidences) if confidences else 0.0
             
             # Calculate duration
             duration = len(audio_data) / sample_rate
@@ -141,18 +148,19 @@ class WhisperProvider(ITranscriptionProvider):
             )
             
             text_segments = []
-            total_confidence = 0.0
-            segment_count = 0
+            confidences = []
             total_duration = 0.0
             
             for segment in segments:
                 text_segments.append(segment.text.strip())
-                total_confidence += segment.avg_logprob
-                segment_count += 1
+                # Convert log probability to linear probability for each segment
+                segment_confidence = np.exp(segment.avg_logprob)
+                confidences.append(segment_confidence)
                 total_duration = max(total_duration, segment.end)
             
             full_text = " ".join(text_segments).strip()
-            avg_confidence = np.exp(total_confidence / segment_count) if segment_count > 0 else 0.0
+            # Calculate average confidence (mean of linear probabilities)
+            avg_confidence = np.mean(confidences) if confidences else 0.0
             
             return TranscriptionResult(
                 text=full_text,
@@ -168,3 +176,20 @@ class WhisperProvider(ITranscriptionProvider):
                 confidence=0.0,
                 duration=0.0
             )
+    
+    def _resample(self, audio: np.ndarray, orig_sr: int, target_sr: int) -> np.ndarray:
+        """
+        Simple resampling using linear interpolation.
+        For better quality, use librosa or scipy.
+        """
+        if orig_sr == target_sr:
+            return audio
+        
+        # Simple linear interpolation
+        duration = len(audio) / orig_sr
+        target_length = int(duration * target_sr)
+        
+        indices = np.linspace(0, len(audio) - 1, target_length)
+        resampled = np.interp(indices, np.arange(len(audio)), audio)
+        
+        return resampled.astype(np.float32)

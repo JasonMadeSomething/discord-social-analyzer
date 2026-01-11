@@ -118,9 +118,23 @@ This will check:
 - GPU/CUDA is available (if using)
 
 **If all checks pass, start the bot:**
+
+Choose your transcription provider:
+
 ```bash
+# Use Whisper (default - high accuracy, GPU recommended)
+python main.py --provider whisper
+
+# Use Vosk (faster, CPU-friendly, real-time)
+python main.py --provider vosk
+
+# Or simply (defaults to Whisper)
 python main.py
 ```
+
+**Provider Comparison:**
+- **Whisper**: Higher accuracy, slower, requires GPU for best performance
+- **Vosk**: Faster, CPU-friendly, excellent for real-time transcription
 
 ## Usage
 
