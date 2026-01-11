@@ -1,16 +1,24 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, scoped_session
 from typing import List, Optional
 from datetime import datetime
+import logging
 
 from src.models.database import UtteranceModel
 from src.models.domain import Utterance
+
+logger = logging.getLogger(__name__)
 
 
 class UtteranceRepository:
     """Repository for utterance-related database operations."""
     
-    def __init__(self, db_session: Session):
-        self.db = db_session
+    def __init__(self, session_factory: scoped_session):
+        self.session_factory = session_factory
+    
+    @property
+    def db(self) -> Session:
+        """Get a fresh database session."""
+        return self.session_factory()
     
     def create_utterance(
         self,
@@ -30,21 +38,29 @@ class UtteranceRepository:
         Returns:
             utterance_id: ID of the created utterance
         """
-        utterance = UtteranceModel(
-            session_id=session_id,
-            user_id=user_id,
-            username=username,
-            display_name=display_name,
-            text=text,
-            started_at=started_at,
-            ended_at=ended_at,
-            confidence=confidence,
-            audio_duration=audio_duration
-        )
-        self.db.add(utterance)
-        self.db.commit()
-        self.db.refresh(utterance)
-        return utterance.id
+        logger.debug(f"Creating utterance for session {session_id}, user {username} ({user_id})")
+        logger.debug(f"Text: \"{text[:100]}...\" Duration: {audio_duration:.2f}s Confidence: {confidence:.2f}")
+        
+        try:
+            utterance = UtteranceModel(
+                session_id=session_id,
+                user_id=user_id,
+                username=username,
+                display_name=display_name,
+                text=text,
+                started_at=started_at,
+                ended_at=ended_at,
+                confidence=confidence,
+                audio_duration=audio_duration
+            )
+            self.db.add(utterance)
+            self.db.commit()
+            self.db.refresh(utterance)
+            logger.info(f"Successfully created utterance #{utterance.id} for user {username} ({user_id})")
+            return utterance.id
+        except Exception as e:
+            logger.error(f"Failed to create utterance: {e}", exc_info=True)
+            raise
     
     def get_utterances_by_session(
         self,

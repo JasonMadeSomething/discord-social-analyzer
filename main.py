@@ -12,8 +12,10 @@ from src.repositories.utterance_repo import UtteranceRepository
 from src.repositories.message_repo import MessageRepository
 from src.services.transcription import TranscriptionService
 from src.services.session_manager import SessionManager
+from src.services.analyzer import ConversationAnalyzer
 from src.bot.client import DiscordBot
 from src.bot.commands import AnalysisCommands
+from src.bot.analysis_commands import AdvancedAnalysisCommands
 
 # Setup logging
 logging.basicConfig(
@@ -41,8 +43,9 @@ class Application:
         logger.info("Setting up database...")
         
         # Create engine
+        db_url = settings.get_database_url()
         self.engine = create_engine(
-            settings.database_url,
+            db_url,
             pool_pre_ping=True,
             echo=False
         )
@@ -57,20 +60,26 @@ class Application:
         
         logger.info("Database setup complete")
     
-    def create_dependencies(self):
+    async def create_dependencies(self):
         """Create all dependencies with dependency injection."""
         logger.info("Creating dependencies...")
         
-        # Database session
-        db_session = self.Session()
-        
-        # Repositories
-        session_repo = SessionRepository(db_session)
-        utterance_repo = UtteranceRepository(db_session)
-        message_repo = MessageRepository(db_session)
+        # Repositories (pass session factory instead of single session)
+        session_repo = SessionRepository(self.Session)
+        utterance_repo = UtteranceRepository(self.Session)
+        message_repo = MessageRepository(self.Session)
         
         # Services
-        transcription_provider = WhisperProvider()
+        # Choose transcription provider:
+        # Option 1: Whisper (slower, less accurate for real-time)
+        # transcription_provider = WhisperProvider()
+        
+        # Option 2: Vosk (faster, better for real-time)
+        # Requires: pip install vosk
+        # Download model from: https://alphacephei.com/vosk/models
+        from src.providers.vosk_provider import VoskProvider
+        transcription_provider = VoskProvider()
+        
         session_manager = SessionManager(session_repo)
         transcription_service = TranscriptionService(
             transcription_provider=transcription_provider,
@@ -78,12 +87,24 @@ class Application:
             session_manager=session_manager
         )
         
-        # Bot
-        bot = DiscordBot(
-            transcription_service=transcription_service,
-            session_manager=session_manager,
+        # Analyzer service
+        analyzer = ConversationAnalyzer(
+            session_repo=session_repo,
+            utterance_repo=utterance_repo,
             message_repo=message_repo
         )
+        
+        # Bot
+        try:
+            bot = DiscordBot(
+                transcription_service=transcription_service,
+                session_manager=session_manager,
+                message_repo=message_repo
+            )
+            logger.info(f"Bot created successfully: {bot}")
+        except Exception as e:
+            logger.error(f"Failed to create bot: {e}", exc_info=True)
+            raise
         
         # Add commands
         commands_cog = AnalysisCommands(
@@ -93,9 +114,15 @@ class Application:
             message_repo=message_repo
         )
         
-        asyncio.get_event_loop().run_until_complete(
-            bot.add_cog(commands_cog)
+        advanced_commands_cog = AdvancedAnalysisCommands(
+            bot=bot,
+            analyzer=analyzer,
+            session_repo=session_repo
         )
+        
+        # In Pycord, add_cog is not async
+        bot.add_cog(commands_cog)
+        bot.add_cog(advanced_commands_cog)
         
         self.bot = bot
         
@@ -109,7 +136,7 @@ class Application:
             self.setup_database()
             
             # Create dependencies
-            bot = self.create_dependencies()
+            bot = await self.create_dependencies()
             
             # Run bot
             logger.info("Starting bot...")
@@ -135,10 +162,36 @@ class Application:
 
 def main():
     """Main entry point."""
-    logger.info("=== Discord Social Analyzer Starting ===")
-    logger.info(f"Model: {settings.whisper_model}")
-    logger.info(f"Device: {settings.whisper_device}")
-    logger.info(f"Database: {settings.database_url}")
+    logger.info("=" * 70)
+    logger.info("Discord Social Analyzer Starting")
+    logger.info("=" * 70)
+    
+    # Show configuration
+    logger.info(f"Whisper Model: {settings.whisper_model}")
+    logger.info(f"Whisper Device: {settings.whisper_device}")
+    logger.info(f"Whisper Compute Type: {settings.whisper_compute_type}")
+    logger.info(f"Whisper VAD Enabled: {settings.whisper_vad_enabled}")
+    logger.info(f"Database: {settings.get_database_url().split('@')[1] if '@' in settings.get_database_url() else settings.get_database_url()}")
+    logger.info(f"Audio Chunk Duration: {settings.audio_chunk_duration}s")
+    logger.info(f"Session Timeout: {settings.session_timeout}s")
+    logger.info(f"Log Level: {settings.log_level}")
+    logger.info(f"Command Prefix: {settings.command_prefix}")
+    
+    # Feature flags
+    logger.info("Features:")
+    logger.info(f"  - Transcription: {settings.feature_transcription}")
+    logger.info(f"  - Message Logging: {settings.feature_message_logging}")
+    logger.info(f"  - Session Tracking: {settings.feature_session_tracking}")
+    
+    # Security
+    if settings.allowed_users:
+        logger.info(f"Restricted to {len(settings.allowed_users)} allowed users")
+    if settings.allowed_channels:
+        logger.info(f"Restricted to {len(settings.allowed_channels)} allowed channels")
+    if settings.admin_users:
+        logger.info(f"{len(settings.admin_users)} admin user(s) configured")
+    
+    logger.info("=" * 70)
     
     app = Application()
     

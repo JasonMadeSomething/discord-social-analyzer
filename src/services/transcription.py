@@ -113,6 +113,8 @@ class TranscriptionService:
             display_name: Display name
             audio_data: Audio samples (float32, mono)
         """
+        logger.debug(f"Received {len(audio_data)} audio samples for user {username} ({user_id}) in channel {channel_id}")
+        
         # Get or create buffer
         if user_id not in self._buffers[channel_id]:
             self._buffers[channel_id][user_id] = AudioBuffer(
@@ -120,6 +122,7 @@ class TranscriptionService:
                 username=username,
                 display_name=display_name
             )
+            logger.debug(f"Created new audio buffer for user {username} ({user_id})")
         
         buffer = self._buffers[channel_id][user_id]
         buffer.add_audio(audio_data)
@@ -129,7 +132,10 @@ class TranscriptionService:
         
         # Check if buffer is ready for transcription
         if buffer.is_ready():
+            logger.debug(f"Buffer ready for transcription for user {username} ({user_id}) - duration: {buffer.duration():.2f}s")
             await self._process_buffer(channel_id, user_id)
+        else:
+            logger.debug(f"Buffer not ready yet for user {username} ({user_id}) - duration: {buffer.duration():.2f}s")
     
     async def _process_buffer(self, channel_id: int, user_id: int) -> None:
         """Process and transcribe a user's audio buffer."""

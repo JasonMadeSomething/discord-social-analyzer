@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, scoped_session
 from sqlalchemy import select
 from typing import Optional, List
 from datetime import datetime
@@ -11,8 +11,13 @@ from src.models.domain import Session as DomainSession, Participant, SessionStat
 class SessionRepository:
     """Repository for session-related database operations."""
     
-    def __init__(self, db_session: Session):
-        self.db = db_session
+    def __init__(self, session_factory: scoped_session):
+        self.session_factory = session_factory
+    
+    @property
+    def db(self) -> Session:
+        """Get a fresh database session."""
+        return self.session_factory()
     
     def create_session(
         self,

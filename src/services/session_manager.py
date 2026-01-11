@@ -101,6 +101,7 @@ class SessionManager:
         session_id = self._active_sessions.get(channel_id)
         
         if not session_id:
+            logger.warning(f"No active session for channel {channel_id} when removing participant {user_id}")
             return None
         
         if user_id in self._session_participants.get(session_id, set()):
@@ -110,11 +111,15 @@ class SessionManager:
             )
             self._session_participants[session_id].discard(user_id)
             logger.info(f"Removed participant {user_id} from session {session_id}")
+            logger.info(f"Remaining participants in session {session_id}: {self._session_participants[session_id]}")
+        else:
+            logger.warning(f"User {user_id} not found in session {session_id}")
         
         self._last_activity[channel_id] = datetime.utcnow()
         
         # Check if session should end (no participants left)
         if len(self._session_participants[session_id]) == 0:
+            logger.info(f"No participants left in session {session_id}, ending session")
             self._end_session(channel_id, SessionStatus.ENDED)
         
         return session_id

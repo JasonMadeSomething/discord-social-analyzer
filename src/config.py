@@ -53,6 +53,14 @@ class Settings(BaseSettings):
     whisper_vad_min_silence_ms: int = 500
     
     # =========================================================================
+    # Vosk Configuration (Alternative to Whisper)
+    # =========================================================================
+    # Path to Vosk model directory
+    # Download models from: https://alphacephei.com/vosk/models
+    # Recommended: vosk-model-en-us-0.22 (1.8GB) or vosk-model-small-en-us-0.15 (40MB)
+    vosk_model_path: str = "models/vosk-model-en-us-0.22"
+    
+    # =========================================================================
     # Vector Store Configuration (Qdrant - for future use)
     # =========================================================================
     qdrant_enabled: bool = False

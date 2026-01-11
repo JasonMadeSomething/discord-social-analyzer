@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, scoped_session
 from typing import List, Optional
 from datetime import datetime
 
@@ -9,8 +9,13 @@ from src.models.domain import Message
 class MessageRepository:
     """Repository for chat message operations."""
     
-    def __init__(self, db_session: Session):
-        self.db = db_session
+    def __init__(self, session_factory: scoped_session):
+        self.session_factory = session_factory
+    
+    @property
+    def db(self) -> Session:
+        """Get a fresh database session."""
+        return self.session_factory()
     
     def create_message(
         self,
