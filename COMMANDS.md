@@ -418,6 +418,96 @@ Extracted using word frequency after filtering:
 !export 1                   # Save for later
 ```
 
+---
+
+## Semantic Search Commands
+
+These commands require Qdrant to be enabled (`QDRANT_ENABLED=true` in `.env`).
+
+### !semantic <query>
+Search conversations by meaning, not just keywords.
+
+**Example:**
+```
+!semantic machine learning algorithms
+!semantic project deadlines
+!semantic debugging issues
+```
+
+**Output:**
+- Top 5 most semantically similar utterances
+- Similarity scores (0.0-1.0, higher = more similar)
+- Speaker names and timestamps
+- Full text of matching utterances
+
+**How it works:**
+- Uses AI embeddings to understand meaning
+- Finds conversations about the same topic even with different words
+- Example: "ML models" will match "machine learning algorithms"
+
+**Insights:**
+- Find discussions by topic, not exact words
+- Discover related conversations you forgot about
+- Search by concept rather than specific phrases
+
+---
+
+### !vectorstats
+Show vector database statistics.
+
+**Example:**
+```
+!vectorstats
+```
+
+**Output:**
+- Collection name
+- Total vectors stored
+- Indexed vectors count
+- Total points in database
+
+**Use cases:**
+- Verify embeddings are being stored
+- Check database health
+- Monitor storage growth
+
+---
+
+### !topicmap
+Topic clustering and mapping (coming soon).
+
+**Example:**
+```
+!topicmap
+```
+
+**Status:** Placeholder for future UMAP/HDBSCAN clustering implementation.
+
+**Planned features:**
+- Automatic topic detection across all conversations
+- Visual topic clusters
+- Topic evolution over time
+- User interest profiles
+
+---
+
+### !similar <utterance_id>
+Find utterances similar to a specific one (coming soon).
+
+**Example:**
+```
+!similar 42
+```
+
+**Status:** Placeholder for future implementation.
+
+**Planned features:**
+- Find related discussions
+- Discover conversation threads
+- Track topic continuity
+
+---
+
 ## Future Commands (Planned)
 
 - `!compare <session1> <session2>` - Compare two sessions side-by-side
@@ -426,6 +516,38 @@ Extracted using word frequency after filtering:
 - `!report <start_date> <end_date>` - Generate time-range report
 - `!summary [session_number]` - AI-generated natural language summary (requires LLM provider)
 - `!predict [session_number]` - Predict conversation outcomes based on patterns
+
+## Enabling Semantic Search
+
+To use semantic search commands:
+
+1. **Enable Qdrant in `.env`:**
+   ```env
+   QDRANT_ENABLED=true
+   QDRANT_HOST=localhost
+   QDRANT_PORT=6333
+   QDRANT_COLLECTION=utterances
+   ```
+
+2. **Start with Docker Compose:**
+   ```powershell
+   .\start.ps1 -Provider whisper -WithAdmin
+   ```
+
+3. **Verify it's working:**
+   ```
+   !vectorstats
+   ```
+
+4. **Start searching:**
+   - Join voice channel and speak
+   - Wait for transcription
+   - Use `!semantic <topic>` to search
+
+**Requirements:**
+- Docker running Qdrant service
+- ~384MB per 1000 utterances (embedding storage)
+- GPU recommended for faster embedding generation
 
 ## Questions?
 

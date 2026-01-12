@@ -73,13 +73,20 @@ class QdrantProvider(IVectorStore):
         Store a vector embedding with metadata.
         
         Args:
-            id: Unique identifier for the embedding
+            id: Unique identifier for the embedding (will be hashed to integer)
             vector: The embedding vector
             metadata: Associated metadata (text, user_id, session_id, timestamp, etc.)
         """
         try:
+            # Convert string ID to integer hash for Qdrant compatibility
+            # Qdrant requires IDs to be integers or UUIDs
+            point_id = hash(id) & 0x7FFFFFFFFFFFFFFF  # Ensure positive 64-bit integer
+            
+            # Store original ID in metadata for reference
+            metadata['original_id'] = id
+            
             point = PointStruct(
-                id=id,
+                id=point_id,
                 vector=vector,
                 payload=metadata
             )
@@ -89,7 +96,7 @@ class QdrantProvider(IVectorStore):
                 points=[point]
             )
             
-            logger.debug(f"Stored embedding: {id}")
+            logger.debug(f"Stored embedding: {id} (point_id: {point_id})")
         except Exception as e:
             logger.error(f"Failed to store embedding {id}: {e}", exc_info=True)
             raise
@@ -124,12 +131,12 @@ class QdrantProvider(IVectorStore):
                     )
                 query_filter = Filter(must=must_conditions)
             
-            results = self.client.search(
+            results = self.client.query_points(
                 collection_name=self.collection_name,
-                query_vector=vector,
+                query=vector,
                 limit=limit,
                 query_filter=query_filter
-            )
+            ).points
             
             formatted_results = []
             for result in results:
@@ -169,8 +176,8 @@ class QdrantProvider(IVectorStore):
             info = self.client.get_collection(self.collection_name)
             return {
                 'name': self.collection_name,
-                'vectors_count': info.vectors_count,
-                'indexed_vectors_count': info.indexed_vectors_count,
+                'vectors_count': info.vectors_count if hasattr(info, 'vectors_count') else info.points_count,
+                'indexed_vectors_count': info.indexed_vectors_count if hasattr(info, 'indexed_vectors_count') else info.points_count,
                 'points_count': info.points_count
             }
         except Exception as e:

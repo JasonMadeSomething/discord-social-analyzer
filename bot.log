@@ -3425,3 +3425,701 @@ Traceback (most recent call last):
     raise CommandRegistrationError(command.name)
 discord.ext.commands.errors.CommandRegistrationError: The command topics is already an existing command or alias.
 2026-01-11 17:46:51,916 - __main__ - INFO - Application shutdown complete
+2026-01-11 17:58:25,911 - __main__ - INFO - ======================================================================
+2026-01-11 17:58:25,911 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-11 17:58:25,911 - __main__ - INFO - ======================================================================
+2026-01-11 17:58:25,911 - __main__ - INFO - Transcription Provider: WHISPER
+2026-01-11 17:58:25,911 - __main__ - INFO - Whisper Model: large-v3
+2026-01-11 17:58:25,911 - __main__ - INFO - Whisper Device: cuda
+2026-01-11 17:58:25,911 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-11 17:58:25,912 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-11 17:58:25,912 - __main__ - INFO - Database: localhost:5432/discord_analyzer
+2026-01-11 17:58:25,912 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-11 17:58:25,912 - __main__ - INFO - Session Timeout: 300s
+2026-01-11 17:58:25,912 - __main__ - INFO - Log Level: INFO
+2026-01-11 17:58:25,912 - __main__ - INFO - Command Prefix: !
+2026-01-11 17:58:25,912 - __main__ - INFO - Features:
+2026-01-11 17:58:25,913 - __main__ - INFO -   - Transcription: True
+2026-01-11 17:58:25,913 - __main__ - INFO -   - Message Logging: True
+2026-01-11 17:58:25,913 - __main__ - INFO -   - Session Tracking: True
+2026-01-11 17:58:25,913 - __main__ - INFO - ======================================================================
+2026-01-11 17:58:25,913 - __main__ - INFO - Setting up database...
+2026-01-11 17:58:25,985 - __main__ - INFO - Database setup complete
+2026-01-11 17:58:25,986 - __main__ - INFO - Creating dependencies...
+2026-01-11 17:58:25,986 - src.providers.whisper_provider - INFO - Initializing Whisper model: large-v3 on cuda with float16
+2026-01-11 17:58:39,910 - src.providers.whisper_provider - INFO - Whisper model loaded successfully
+2026-01-11 17:58:39,910 - __main__ - INFO - Using Whisper transcription provider
+2026-01-11 17:58:39,910 - __main__ - INFO - Initializing vector database...
+2026-01-11 17:58:42,404 - src.providers.embedding_provider - INFO - Loading embedding model: all-MiniLM-L6-v2
+2026-01-11 17:58:42,404 - src.providers.embedding_provider - INFO - Using device: cuda
+2026-01-11 17:58:42,405 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-01-11 17:58:43,457 - src.providers.embedding_provider - INFO - Embedding model loaded: all-MiniLM-L6-v2 (dim=384)
+2026-01-11 17:58:43,551 - httpx - INFO - HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2026-01-11 17:58:43,558 - httpx - INFO - HTTP Request: GET http://localhost:6333/collections "HTTP/1.1 200 OK"
+2026-01-11 17:58:43,559 - src.providers.qdrant_provider - INFO - Creating Qdrant collection: utterances
+2026-01-11 17:58:43,715 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances "HTTP/1.1 200 OK"
+2026-01-11 17:58:43,716 - src.providers.qdrant_provider - INFO - Collection created: utterances
+2026-01-11 17:58:43,716 - src.providers.qdrant_provider - INFO - Qdrant provider initialized: localhost:6333/utterances
+2026-01-11 17:58:43,716 - src.services.vector_service - INFO - Vector service initialized and enabled
+2026-01-11 17:58:43,717 - __main__ - INFO - Vector database initialized successfully
+2026-01-11 17:58:43,717 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x000001308BCF3E50>
+2026-01-11 17:58:43,719 - __main__ - INFO - Semantic commands enabled
+2026-01-11 17:58:43,719 - __main__ - INFO - Dependencies created
+2026-01-11 17:58:43,719 - __main__ - INFO - Starting bot...
+2026-01-11 17:58:43,719 - discord.client - INFO - logging in using static token
+2026-01-11 17:58:44,087 - discord.gateway - INFO - Shard ID None has sent the IDENTIFY payload.
+2026-01-11 17:58:44,206 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-c-kqd1",{"micros":88631,"calls":["id_created",{"micros":488,"calls":[]},"session_lookup_time",{"micros":1739,"calls":[]},"session_lookup_finished",{"micros":11,"calls":[]},"discord-sessions-prd-2-71",{"micros":86078,"calls":["start_session",{"micros":78543,"calls":["discord-api-rpc-77cb85cc97-2h5mc",{"micros":42952,"calls":["get_user",{"micros":5150},"get_guilds",{"micros":3211},"send_scheduled_deletion_message",{"micros":13},"guild_join_requests",{"micros":2},"authorized_ip_coro",{"micros":7},"pending_payments",{"micros":421},"apex_experiments",{"micros":28877},"user_activities",{"micros":6},"played_application_ids",{"micros":3},"linked_users",{"micros":3},"ad_personalization_toggles_disabled",{"micros":3}]}]},"starting_guild_connect",{"micros":41,"calls":[]},"presence_started",{"micros":340,"calls":[]},"guilds_started",{"micros":60,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":0,"calls":[]},"presence_connect",{"micros":7065,"calls":[]},"connect_finished",{"micros":7078,"calls":[]},"build_ready",{"micros":12,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: e4d4545c0d36bd2ef1c2898ea187e3a0).
+2026-01-11 17:58:46,336 - src.bot.client - INFO - Logged in as CreepyBot#8389 (ID: 1459972521469280401)
+2026-01-11 17:58:46,336 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-11 18:44:25,063 - discord.client - INFO - Got a request to RESUME the websocket.
+2026-01-11 18:44:36,493 - discord.gateway - INFO - Shard ID None has sent the RESUME payload.
+2026-01-11 18:44:36,528 - discord.gateway - INFO - Shard ID None has successfully RESUMED session e4d4545c0d36bd2ef1c2898ea187e3a0 under trace ["gateway-prd-arm-us-east1-d-c9v0",{"micros":502,"calls":["id_created",{"micros":0,"calls":[]},"session_lookup_time",{"micros":231,"calls":[]},"session_lookup_finished",{"micros":10,"calls":[]},"discord-sessions-prd-2-71",{"micros":15}]}].
+2026-01-11 18:54:18,817 - src.bot.client - INFO - soviet_jesus joined General
+2026-01-11 18:54:18,822 - src.services.session_manager - INFO - Started session eb2808ff-4c87-4ae9-a220-1629dbbba8ae for channel General (733522367623725101)
+2026-01-11 18:54:18,825 - src.services.session_manager - INFO - Added participant soviet_jesus (139496479852068864) to session eb2808ff-4c87-4ae9-a220-1629dbbba8ae
+2026-01-11 18:54:18,825 - src.bot.client - INFO - Current recording channels: []
+2026-01-11 18:54:18,826 - src.bot.client - INFO - Attempting to start recording for channel: General
+2026-01-11 18:54:18,826 - src.bot.client - INFO - Connecting to voice channel General
+2026-01-11 18:54:18,826 - discord.voice_client - INFO - Connecting to voice...
+2026-01-11 18:54:18,826 - discord.voice_client - INFO - Starting voice handshake... (connection attempt 1)
+2026-01-11 18:54:18,868 - src.bot.client - INFO - CreepyBot joined General
+2026-01-11 18:54:18,868 - src.bot.client - INFO - Bot joined channel, not adding as participant
+2026-01-11 18:54:18,932 - discord.voice_client - INFO - Voice handshake complete. Endpoint found c-atl01-a7985897.discord.media:2087
+2026-01-11 18:54:18,960 - discord.state - ERROR - Exception occurred during Voice Protocol voice server update handler
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\state.py", line 152, in logging_coroutine
+    await coroutine
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\voice_client.py", line 339, in on_voice_server_update
+    await self.ws.close(4000)
+          ^^^^^^^^^^^^^
+AttributeError: '_MissingSentinel' object has no attribute 'close'
+2026-01-11 18:54:19,238 - discord.gateway - INFO - selected the voice protocol for use (aead_xchacha20_poly1305_rtpsize)
+2026-01-11 18:54:19,271 - discord.gateway - INFO - received secret key for voice connection
+2026-01-11 18:54:19,271 - src.bot.client - INFO - Successfully connected to voice channel General
+2026-01-11 18:54:19,271 - src.bot.client - INFO - Created audio sink for channel General
+2026-01-11 18:54:19,271 - src.bot.client - INFO - Calling vc.start_recording()
+2026-01-11 18:54:19,272 - src.bot.client - INFO - Started recording channel: General
+2026-01-11 18:54:26,966 - faster_whisper - INFO - Processing audio with duration 00:06.940
+2026-01-11 18:54:35,548 - faster_whisper - INFO - Processing audio with duration 00:08.580
+2026-01-11 18:54:35,826 - src.repositories.utterance_repo - INFO - Successfully created utterance #30 for user soviet_jesus (139496479852068864)
+2026-01-11 18:54:35,826 - src.services.transcription - INFO - Transcribed utterance #30: soviet_jesus: "Potato...." (0.49 confidence)
+2026-01-11 18:54:35,929 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 400 Bad Request"
+2026-01-11 18:54:35,930 - src.providers.qdrant_provider - ERROR - Failed to store embedding utterance_30: Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value utterance_30 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\src\providers\qdrant_provider.py", line 87, in store_embedding
+    self.client.upsert(
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\qdrant_client.py", line 938, in upsert
+    return self._client.upsert(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\qdrant_remote.py", line 1121, in upsert
+    http_result = self.openapi_client.points_api.upsert_points(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api\points_api.py", line 994, in upsert_points
+    return self._build_for_upsert_points(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api\points_api.py", line 515, in _build_for_upsert_points
+    return self.api_client.request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api_client.py", line 95, in request
+    return self.send(request, type_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api_client.py", line 130, in send
+    raise UnexpectedResponse.for_response(response)
+qdrant_client.http.exceptions.UnexpectedResponse: Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value utterance_30 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2026-01-11 18:54:35,975 - src.services.vector_service - ERROR - Failed to store utterance embedding: Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value utterance_30 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\src\services\vector_service.py", line 70, in store_utterance
+    await self.vector_store.store_embedding(vector_id, vector, metadata)
+  File "D:\Code\discord-social-analyzer\src\providers\qdrant_provider.py", line 87, in store_embedding
+    self.client.upsert(
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\qdrant_client.py", line 938, in upsert
+    return self._client.upsert(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\qdrant_remote.py", line 1121, in upsert
+    http_result = self.openapi_client.points_api.upsert_points(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api\points_api.py", line 994, in upsert_points
+    return self._build_for_upsert_points(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api\points_api.py", line 515, in _build_for_upsert_points
+    return self.api_client.request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api_client.py", line 95, in request
+    return self.send(request, type_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api_client.py", line 130, in send
+    raise UnexpectedResponse.for_response(response)
+qdrant_client.http.exceptions.UnexpectedResponse: Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value utterance_30 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2026-01-11 18:54:45,388 - faster_whisper - INFO - Processing audio with duration 00:09.840
+2026-01-11 18:54:45,616 - src.repositories.utterance_repo - INFO - Successfully created utterance #31 for user soviet_jesus (139496479852068864)
+2026-01-11 18:54:45,616 - src.services.transcription - INFO - Transcribed utterance #31: soviet_jesus: "Potato...." (0.42 confidence)
+2026-01-11 18:54:45,636 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 400 Bad Request"
+2026-01-11 18:54:45,636 - src.providers.qdrant_provider - ERROR - Failed to store embedding utterance_31: Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value utterance_31 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\src\providers\qdrant_provider.py", line 87, in store_embedding
+    self.client.upsert(
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\qdrant_client.py", line 938, in upsert
+    return self._client.upsert(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\qdrant_remote.py", line 1121, in upsert
+    http_result = self.openapi_client.points_api.upsert_points(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api\points_api.py", line 994, in upsert_points
+    return self._build_for_upsert_points(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api\points_api.py", line 515, in _build_for_upsert_points
+    return self.api_client.request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api_client.py", line 95, in request
+    return self.send(request, type_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api_client.py", line 130, in send
+    raise UnexpectedResponse.for_response(response)
+qdrant_client.http.exceptions.UnexpectedResponse: Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value utterance_31 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2026-01-11 18:54:45,638 - src.services.vector_service - ERROR - Failed to store utterance embedding: Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value utterance_31 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\src\services\vector_service.py", line 70, in store_utterance
+    await self.vector_store.store_embedding(vector_id, vector, metadata)
+  File "D:\Code\discord-social-analyzer\src\providers\qdrant_provider.py", line 87, in store_embedding
+    self.client.upsert(
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\qdrant_client.py", line 938, in upsert
+    return self._client.upsert(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\qdrant_remote.py", line 1121, in upsert
+    http_result = self.openapi_client.points_api.upsert_points(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api\points_api.py", line 994, in upsert_points
+    return self._build_for_upsert_points(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api\points_api.py", line 515, in _build_for_upsert_points
+    return self.api_client.request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api_client.py", line 95, in request
+    return self.send(request, type_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api_client.py", line 130, in send
+    raise UnexpectedResponse.for_response(response)
+qdrant_client.http.exceptions.UnexpectedResponse: Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value utterance_31 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2026-01-11 18:54:51,928 - src.bot.client - INFO - Shutting down bot...
+2026-01-11 18:54:51,929 - src.bot.client - INFO - Stopping recording and disconnecting from General
+2026-01-11 18:54:51,929 - src.bot.client - INFO - Attempting to stop recording for channel: General
+2026-01-11 18:54:51,929 - src.bot.client - INFO - Voice client found: True
+2026-01-11 18:54:51,929 - src.bot.client - INFO - Voice client connected: True
+2026-01-11 18:54:51,929 - src.bot.client - INFO - Stopping recording on voice client
+2026-01-11 18:54:51,929 - src.bot.client - INFO - Disconnecting from voice channel
+2026-01-11 18:54:51,929 - discord.voice_client - INFO - Disconnecting from voice normally, close code 1000.
+2026-01-11 18:54:51,936 - src.bot.client - INFO - Recording callback called for channel General
+2026-01-11 18:54:51,957 - discord.voice_client - INFO - The voice handshake is being terminated for Channel ID 733522367623725101 (Guild ID 733522367141249066)
+2026-01-11 18:54:51,958 - src.bot.client - INFO - Successfully disconnected from voice channel
+2026-01-11 18:54:51,958 - faster_whisper - INFO - Processing audio with duration 00:00.980
+2026-01-11 18:54:52,100 - src.repositories.utterance_repo - INFO - Successfully created utterance #32 for user soviet_jesus (139496479852068864)
+2026-01-11 18:54:52,100 - src.services.transcription - INFO - Transcribed utterance #32: soviet_jesus: "Ah, shit...." (0.60 confidence)
+2026-01-11 18:54:52,107 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 400 Bad Request"
+2026-01-11 18:54:52,108 - src.providers.qdrant_provider - ERROR - Failed to store embedding utterance_32: Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value utterance_32 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\main.py", line 206, in run
+    await bot.start(settings.discord_token)
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\client.py", line 824, in start
+    await self.connect(reconnect=reconnect)
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\client.py", line 716, in connect
+    await self.ws.poll_event()
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\gateway.py", line 620, in poll_event
+    msg = await self.socket.receive(timeout=self._max_heartbeat_timeout)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\aiohttp\client_ws.py", line 334, in receive
+    msg = await self._reader.read()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "aiohttp/_websocket/reader_c.py", line 118, in read
+  File "aiohttp/_websocket/reader_c.py", line 115, in aiohttp._websocket.reader_c.WebSocketDataQueue.read
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\src\providers\qdrant_provider.py", line 87, in store_embedding
+    self.client.upsert(
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\qdrant_client.py", line 938, in upsert
+    return self._client.upsert(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\qdrant_remote.py", line 1121, in upsert
+    http_result = self.openapi_client.points_api.upsert_points(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api\points_api.py", line 994, in upsert_points
+    return self._build_for_upsert_points(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api\points_api.py", line 515, in _build_for_upsert_points
+    return self.api_client.request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api_client.py", line 95, in request
+    return self.send(request, type_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api_client.py", line 130, in send
+    raise UnexpectedResponse.for_response(response)
+qdrant_client.http.exceptions.UnexpectedResponse: Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value utterance_32 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2026-01-11 18:54:52,138 - src.services.vector_service - ERROR - Failed to store utterance embedding: Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value utterance_32 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\main.py", line 206, in run
+    await bot.start(settings.discord_token)
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\client.py", line 824, in start
+    await self.connect(reconnect=reconnect)
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\client.py", line 716, in connect
+    await self.ws.poll_event()
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\gateway.py", line 620, in poll_event
+    msg = await self.socket.receive(timeout=self._max_heartbeat_timeout)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\aiohttp\client_ws.py", line 334, in receive
+    msg = await self._reader.read()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "aiohttp/_websocket/reader_c.py", line 118, in read
+  File "aiohttp/_websocket/reader_c.py", line 115, in aiohttp._websocket.reader_c.WebSocketDataQueue.read
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\src\services\vector_service.py", line 70, in store_utterance
+    await self.vector_store.store_embedding(vector_id, vector, metadata)
+  File "D:\Code\discord-social-analyzer\src\providers\qdrant_provider.py", line 87, in store_embedding
+    self.client.upsert(
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\qdrant_client.py", line 938, in upsert
+    return self._client.upsert(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\qdrant_remote.py", line 1121, in upsert
+    http_result = self.openapi_client.points_api.upsert_points(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api\points_api.py", line 994, in upsert_points
+    return self._build_for_upsert_points(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api\points_api.py", line 515, in _build_for_upsert_points
+    return self.api_client.request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api_client.py", line 95, in request
+    return self.send(request, type_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\qdrant_client\http\api_client.py", line 130, in send
+    raise UnexpectedResponse.for_response(response)
+qdrant_client.http.exceptions.UnexpectedResponse: Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value utterance_32 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2026-01-11 18:54:52,139 - src.bot.client - INFO - Stopped recording channel: General
+2026-01-11 18:54:52,141 - __main__ - INFO - Application shutdown complete
+2026-01-11 18:54:52,142 - __main__ - INFO - Shutdown requested
+2026-01-11 18:56:32,531 - __main__ - INFO - ======================================================================
+2026-01-11 18:56:32,532 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-11 18:56:32,532 - __main__ - INFO - ======================================================================
+2026-01-11 18:56:32,532 - __main__ - INFO - Transcription Provider: WHISPER
+2026-01-11 18:56:32,532 - __main__ - INFO - Whisper Model: large-v3
+2026-01-11 18:56:32,532 - __main__ - INFO - Whisper Device: cuda
+2026-01-11 18:56:32,532 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-11 18:56:32,532 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-11 18:56:32,533 - __main__ - INFO - Database: localhost:5432/discord_analyzer
+2026-01-11 18:56:32,533 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-11 18:56:32,533 - __main__ - INFO - Session Timeout: 300s
+2026-01-11 18:56:32,533 - __main__ - INFO - Log Level: INFO
+2026-01-11 18:56:32,533 - __main__ - INFO - Command Prefix: !
+2026-01-11 18:56:32,533 - __main__ - INFO - Features:
+2026-01-11 18:56:32,533 - __main__ - INFO -   - Transcription: True
+2026-01-11 18:56:32,533 - __main__ - INFO -   - Message Logging: True
+2026-01-11 18:56:32,534 - __main__ - INFO -   - Session Tracking: True
+2026-01-11 18:56:32,534 - __main__ - INFO - ======================================================================
+2026-01-11 18:56:32,535 - __main__ - INFO - Setting up database...
+2026-01-11 18:56:32,763 - __main__ - INFO - Database setup complete
+2026-01-11 18:56:32,763 - __main__ - INFO - Creating dependencies...
+2026-01-11 18:56:32,764 - src.providers.whisper_provider - INFO - Initializing Whisper model: large-v3 on cuda with float16
+2026-01-11 18:56:46,899 - src.providers.whisper_provider - INFO - Whisper model loaded successfully
+2026-01-11 18:56:46,900 - __main__ - INFO - Using Whisper transcription provider
+2026-01-11 18:56:46,900 - __main__ - INFO - Initializing vector database...
+2026-01-11 18:56:54,703 - src.providers.embedding_provider - INFO - Loading embedding model: all-MiniLM-L6-v2
+2026-01-11 18:56:54,703 - src.providers.embedding_provider - INFO - Using device: cuda
+2026-01-11 18:56:54,704 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-01-11 18:56:55,847 - src.providers.embedding_provider - INFO - Embedding model loaded: all-MiniLM-L6-v2 (dim=384)
+2026-01-11 18:56:55,941 - httpx - INFO - HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2026-01-11 18:56:55,948 - httpx - INFO - HTTP Request: GET http://localhost:6333/collections "HTTP/1.1 200 OK"
+2026-01-11 18:56:55,949 - src.providers.qdrant_provider - INFO - Collection already exists: utterances
+2026-01-11 18:56:55,950 - src.providers.qdrant_provider - INFO - Qdrant provider initialized: localhost:6333/utterances
+2026-01-11 18:56:55,950 - src.services.vector_service - INFO - Vector service initialized and enabled
+2026-01-11 18:56:55,950 - __main__ - INFO - Vector database initialized successfully
+2026-01-11 18:56:55,950 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x000002058C47BE10>
+2026-01-11 18:56:55,951 - __main__ - INFO - Semantic commands enabled
+2026-01-11 18:56:55,952 - __main__ - INFO - Dependencies created
+2026-01-11 18:56:55,952 - __main__ - INFO - Starting bot...
+2026-01-11 18:56:55,952 - discord.client - INFO - logging in using static token
+2026-01-11 18:56:56,313 - discord.gateway - INFO - Shard ID None has sent the IDENTIFY payload.
+2026-01-11 18:56:56,453 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-b-7bpp",{"micros":111248,"calls":["id_created",{"micros":1000,"calls":[]},"session_lookup_time",{"micros":896,"calls":[]},"session_lookup_finished",{"micros":13,"calls":[]},"discord-sessions-prd-2-22",{"micros":107952,"calls":["start_session",{"micros":82410,"calls":["discord-api-rpc-77cb85cc97-52br7",{"micros":44826,"calls":["get_user",{"micros":6260},"get_guilds",{"micros":4473},"send_scheduled_deletion_message",{"micros":22},"guild_join_requests",{"micros":4},"authorized_ip_coro",{"micros":14},"pending_payments",{"micros":439},"apex_experiments",{"micros":30555},"user_activities",{"micros":6},"played_application_ids",{"micros":4},"linked_users",{"micros":3},"ad_personalization_toggles_disabled",{"micros":4}]}]},"starting_guild_connect",{"micros":40,"calls":[]},"presence_started",{"micros":8785,"calls":[]},"guilds_started",{"micros":62,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":16620,"calls":[]},"connect_finished",{"micros":16638,"calls":[]},"build_ready",{"micros":14,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: bc74443783ddefc4bcc025b71c5d373b).
+2026-01-11 18:56:58,580 - src.bot.client - INFO - Logged in as CreepyBot#8389 (ID: 1459972521469280401)
+2026-01-11 18:56:58,580 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-11 19:00:53,672 - src.bot.client - INFO - soviet_jesus joined General
+2026-01-11 19:00:53,681 - src.services.session_manager - INFO - Started session 3a5403ae-ce30-4f04-932d-7181f00c5813 for channel General (733522367623725101)
+2026-01-11 19:00:53,687 - src.services.session_manager - INFO - Added participant soviet_jesus (139496479852068864) to session 3a5403ae-ce30-4f04-932d-7181f00c5813
+2026-01-11 19:00:53,687 - src.bot.client - INFO - Current recording channels: []
+2026-01-11 19:00:53,687 - src.bot.client - INFO - Attempting to start recording for channel: General
+2026-01-11 19:00:53,688 - src.bot.client - INFO - Connecting to voice channel General
+2026-01-11 19:00:53,688 - discord.voice_client - INFO - Connecting to voice...
+2026-01-11 19:00:53,688 - discord.voice_client - INFO - Starting voice handshake... (connection attempt 1)
+2026-01-11 19:00:53,722 - src.bot.client - INFO - CreepyBot joined General
+2026-01-11 19:00:53,722 - src.bot.client - INFO - Bot joined channel, not adding as participant
+2026-01-11 19:00:53,811 - discord.voice_client - INFO - Voice handshake complete. Endpoint found c-atl01-ab0a5aa3.discord.media:2053
+2026-01-11 19:00:53,821 - discord.state - ERROR - Exception occurred during Voice Protocol voice server update handler
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\state.py", line 152, in logging_coroutine
+    await coroutine
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\voice_client.py", line 339, in on_voice_server_update
+    await self.ws.close(4000)
+          ^^^^^^^^^^^^^
+AttributeError: '_MissingSentinel' object has no attribute 'close'
+2026-01-11 19:01:05,104 - discord.gateway - INFO - selected the voice protocol for use (aead_xchacha20_poly1305_rtpsize)
+2026-01-11 19:01:05,134 - discord.gateway - INFO - received secret key for voice connection
+2026-01-11 19:01:05,134 - src.bot.client - INFO - Successfully connected to voice channel General
+2026-01-11 19:01:05,134 - src.bot.client - INFO - Created audio sink for channel General
+2026-01-11 19:01:05,134 - src.bot.client - INFO - Calling vc.start_recording()
+2026-01-11 19:01:05,136 - src.bot.client - INFO - Started recording channel: General
+2026-01-11 19:01:10,726 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,726 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,726 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,727 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,727 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,727 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,727 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,727 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,728 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,728 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,728 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,728 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,728 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,728 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,729 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,729 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,729 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,729 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,729 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,729 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,729 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,729 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,729 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,729 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,729 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,729 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,730 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,730 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,730 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,730 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,730 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,730 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,730 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,730 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,730 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,730 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,730 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,730 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,732 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,732 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,732 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,732 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,732 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,732 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,732 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,732 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,733 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,733 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,733 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,733 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,734 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,734 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,734 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,734 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,734 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,734 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,734 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,734 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,735 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,735 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,735 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,735 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,749 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,749 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:10,766 - discord.opus - INFO - error has happened in opus_decode
+2026-01-11 19:01:10,766 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-11 19:01:15,889 - faster_whisper - INFO - Processing audio with duration 00:05.140
+2026-01-11 19:01:16,399 - src.repositories.utterance_repo - INFO - Successfully created utterance #33 for user soviet_jesus (139496479852068864)
+2026-01-11 19:01:16,399 - src.services.transcription - INFO - Transcribed utterance #33: soviet_jesus: "Does the gravy have an end?..." (0.79 confidence)
+2026-01-11 19:01:16,500 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:01:21,810 - faster_whisper - INFO - Processing audio with duration 00:05.920
+2026-01-11 19:01:22,146 - src.repositories.utterance_repo - INFO - Successfully created utterance #34 for user soviet_jesus (139496479852068864)
+2026-01-11 19:01:22,148 - src.services.transcription - INFO - Transcribed utterance #34: soviet_jesus: "Does the gravy have an end?..." (0.76 confidence)
+2026-01-11 19:01:22,161 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:01:25,508 - faster_whisper - INFO - Processing audio with duration 00:03.700
+2026-01-11 19:01:25,785 - src.repositories.utterance_repo - INFO - Successfully created utterance #35 for user soviet_jesus (139496479852068864)
+2026-01-11 19:01:25,785 - src.services.transcription - INFO - Transcribed utterance #35: soviet_jesus: "How is the gravy?..." (0.75 confidence)
+2026-01-11 19:01:25,796 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:01:36,996 - faster_whisper - INFO - Processing audio with duration 00:11.480
+2026-01-11 19:01:37,327 - src.repositories.utterance_repo - INFO - Successfully created utterance #36 for user soviet_jesus (139496479852068864)
+2026-01-11 19:01:37,328 - src.services.transcription - INFO - Transcribed utterance #36: soviet_jesus: "Why is this delayed?..." (0.64 confidence)
+2026-01-11 19:01:37,340 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:01:40,490 - faster_whisper - INFO - Processing audio with duration 00:03.500
+2026-01-11 19:01:40,678 - src.repositories.utterance_repo - INFO - Successfully created utterance #37 for user soviet_jesus (139496479852068864)
+2026-01-11 19:01:40,678 - src.services.transcription - INFO - Transcribed utterance #37: soviet_jesus: "Sparkle...." (0.46 confidence)
+2026-01-11 19:01:40,689 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:01:45,849 - faster_whisper - INFO - Processing audio with duration 00:05.360
+2026-01-11 19:01:46,280 - src.repositories.utterance_repo - INFO - Successfully created utterance #38 for user soviet_jesus (139496479852068864)
+2026-01-11 19:01:46,281 - src.services.transcription - INFO - Transcribed utterance #38: soviet_jesus: "Sparkle 2..." (0.59 confidence)
+2026-01-11 19:01:46,295 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:02:16,249 - faster_whisper - INFO - Processing audio with duration 00:30.380
+2026-01-11 19:02:16,883 - src.repositories.utterance_repo - INFO - Successfully created utterance #39 for user soviet_jesus (139496479852068864)
+2026-01-11 19:02:16,883 - src.services.transcription - INFO - Transcribed utterance #39: soviet_jesus: "I need to test this with more users. Thank you...." (0.79 confidence)
+2026-01-11 19:02:16,904 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:02:18,517 - src.bot.client - INFO - Shutting down bot...
+2026-01-11 19:02:18,518 - src.bot.client - INFO - Stopping recording and disconnecting from General
+2026-01-11 19:02:18,518 - src.bot.client - INFO - Attempting to stop recording for channel: General
+2026-01-11 19:02:18,518 - src.bot.client - INFO - Voice client found: True
+2026-01-11 19:02:18,518 - src.bot.client - INFO - Voice client connected: True
+2026-01-11 19:02:18,518 - src.bot.client - INFO - Stopping recording on voice client
+2026-01-11 19:02:18,518 - src.bot.client - INFO - Disconnecting from voice channel
+2026-01-11 19:02:18,518 - discord.voice_client - INFO - Disconnecting from voice normally, close code 1000.
+2026-01-11 19:02:18,526 - src.bot.client - INFO - Recording callback called for channel General
+2026-01-11 19:02:18,553 - discord.voice_client - INFO - The voice handshake is being terminated for Channel ID 733522367623725101 (Guild ID 733522367141249066)
+2026-01-11 19:02:18,553 - src.bot.client - INFO - Successfully disconnected from voice channel
+2026-01-11 19:02:18,554 - src.bot.client - INFO - Stopped recording channel: General
+2026-01-11 19:02:18,554 - __main__ - INFO - Application shutdown complete
+2026-01-11 19:02:18,556 - __main__ - INFO - Shutdown requested
+2026-01-11 19:05:59,957 - __main__ - INFO - ======================================================================
+2026-01-11 19:05:59,957 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-11 19:05:59,957 - __main__ - INFO - ======================================================================
+2026-01-11 19:05:59,957 - __main__ - INFO - Transcription Provider: WHISPER
+2026-01-11 19:05:59,958 - __main__ - INFO - Whisper Model: large-v3
+2026-01-11 19:05:59,958 - __main__ - INFO - Whisper Device: cuda
+2026-01-11 19:05:59,958 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-11 19:05:59,958 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-11 19:05:59,958 - __main__ - INFO - Database: localhost:5433/discord_analyzer
+2026-01-11 19:05:59,958 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-11 19:05:59,958 - __main__ - INFO - Session Timeout: 300s
+2026-01-11 19:05:59,958 - __main__ - INFO - Log Level: INFO
+2026-01-11 19:05:59,959 - __main__ - INFO - Command Prefix: !
+2026-01-11 19:05:59,959 - __main__ - INFO - Features:
+2026-01-11 19:05:59,959 - __main__ - INFO -   - Transcription: True
+2026-01-11 19:05:59,959 - __main__ - INFO -   - Message Logging: True
+2026-01-11 19:05:59,959 - __main__ - INFO -   - Session Tracking: True
+2026-01-11 19:05:59,959 - __main__ - INFO - ======================================================================
+2026-01-11 19:05:59,960 - __main__ - INFO - Setting up database...
+2026-01-11 19:06:00,650 - __main__ - INFO - Database setup complete
+2026-01-11 19:06:00,650 - __main__ - INFO - Creating dependencies...
+2026-01-11 19:06:00,650 - src.providers.whisper_provider - INFO - Initializing Whisper model: large-v3 on cuda with float16
+2026-01-11 19:06:14,594 - src.providers.whisper_provider - INFO - Whisper model loaded successfully
+2026-01-11 19:06:14,594 - __main__ - INFO - Using Whisper transcription provider
+2026-01-11 19:06:14,594 - __main__ - INFO - Initializing vector database...
+2026-01-11 19:06:22,131 - src.providers.embedding_provider - INFO - Loading embedding model: all-MiniLM-L6-v2
+2026-01-11 19:06:22,131 - src.providers.embedding_provider - INFO - Using device: cuda
+2026-01-11 19:06:22,132 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-01-11 19:06:23,317 - src.providers.embedding_provider - INFO - Embedding model loaded: all-MiniLM-L6-v2 (dim=384)
+2026-01-11 19:06:23,426 - httpx - INFO - HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2026-01-11 19:06:23,432 - httpx - INFO - HTTP Request: GET http://localhost:6333/collections "HTTP/1.1 200 OK"
+2026-01-11 19:06:23,433 - src.providers.qdrant_provider - INFO - Collection already exists: utterances
+2026-01-11 19:06:23,434 - src.providers.qdrant_provider - INFO - Qdrant provider initialized: localhost:6333/utterances
+2026-01-11 19:06:23,434 - src.services.vector_service - INFO - Vector service initialized and enabled
+2026-01-11 19:06:23,434 - __main__ - INFO - Vector database initialized successfully
+2026-01-11 19:06:23,434 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x000001FF8C1E93D0>
+2026-01-11 19:06:23,435 - __main__ - INFO - Semantic commands enabled
+2026-01-11 19:06:23,435 - __main__ - INFO - Dependencies created
+2026-01-11 19:06:23,435 - __main__ - INFO - Starting bot...
+2026-01-11 19:06:23,436 - discord.client - INFO - logging in using static token
+2026-01-11 19:06:34,876 - discord.gateway - INFO - Shard ID None has sent the IDENTIFY payload.
+2026-01-11 19:06:35,322 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-c-fbxd",{"micros":409168,"calls":["id_created",{"micros":398,"calls":[]},"session_lookup_time",{"micros":271,"calls":[]},"session_lookup_finished",{"micros":13,"calls":[]},"discord-sessions-prd-2-128",{"micros":408042,"calls":["start_session",{"micros":405938,"calls":["discord-api-rpc-77cb85cc97-psjtt",{"micros":307004,"calls":["get_user",{"micros":67368},"get_guilds",{"micros":5285},"send_scheduled_deletion_message",{"micros":15},"guild_join_requests",{"micros":3},"authorized_ip_coro",{"micros":13},"pending_payments",{"micros":737},"apex_experiments",{"micros":87566},"user_activities",{"micros":6},"played_application_ids",{"micros":4},"linked_users",{"micros":5},"ad_personalization_toggles_disabled",{"micros":4}]}]},"starting_guild_connect",{"micros":33,"calls":[]},"presence_started",{"micros":430,"calls":[]},"guilds_started",{"micros":64,"calls":[]},"lobbies_started",{"micros":2,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":1551,"calls":[]},"connect_finished",{"micros":1564,"calls":[]},"build_ready",{"micros":9,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: f3fbb0bc68010b504907b5ffa4e36581).
+2026-01-11 19:06:37,426 - src.bot.client - INFO - Logged in as CreepyBot#8389 (ID: 1459972521469280401)
+2026-01-11 19:06:37,426 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-11 19:06:48,032 - src.bot.client - INFO - soviet_jesus joined General
+2026-01-11 19:06:48,044 - src.services.session_manager - INFO - Started session f31290cb-f2f0-4eda-8c72-a5f0383a6216 for channel General (733522367623725101)
+2026-01-11 19:06:48,051 - src.services.session_manager - INFO - Added participant soviet_jesus (139496479852068864) to session f31290cb-f2f0-4eda-8c72-a5f0383a6216
+2026-01-11 19:06:48,051 - src.bot.client - INFO - Current recording channels: []
+2026-01-11 19:06:48,052 - src.bot.client - INFO - Attempting to start recording for channel: General
+2026-01-11 19:06:48,052 - src.bot.client - INFO - Connecting to voice channel General
+2026-01-11 19:06:48,052 - discord.voice_client - INFO - Connecting to voice...
+2026-01-11 19:06:48,052 - discord.voice_client - INFO - Starting voice handshake... (connection attempt 1)
+2026-01-11 19:06:48,098 - src.bot.client - INFO - CreepyBot joined General
+2026-01-11 19:06:48,098 - src.bot.client - INFO - Bot joined channel, not adding as participant
+2026-01-11 19:06:48,149 - discord.voice_client - INFO - Voice handshake complete. Endpoint found c-atl11-661269ad.discord.media:2053
+2026-01-11 19:06:48,170 - discord.state - ERROR - Exception occurred during Voice Protocol voice server update handler
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\state.py", line 152, in logging_coroutine
+    await coroutine
+  File "D:\Code\discord-social-analyzer\venv\Lib\site-packages\discord\voice_client.py", line 339, in on_voice_server_update
+    await self.ws.close(4000)
+          ^^^^^^^^^^^^^
+AttributeError: '_MissingSentinel' object has no attribute 'close'
+2026-01-11 19:06:59,482 - discord.gateway - INFO - selected the voice protocol for use (aead_xchacha20_poly1305_rtpsize)
+2026-01-11 19:06:59,518 - discord.gateway - INFO - received secret key for voice connection
+2026-01-11 19:06:59,518 - src.bot.client - INFO - Successfully connected to voice channel General
+2026-01-11 19:06:59,518 - src.bot.client - INFO - Created audio sink for channel General
+2026-01-11 19:06:59,518 - src.bot.client - INFO - Calling vc.start_recording()
+2026-01-11 19:06:59,520 - src.bot.client - INFO - Started recording channel: General
+2026-01-11 19:07:05,608 - faster_whisper - INFO - Processing audio with duration 00:05.300
+2026-01-11 19:07:05,929 - src.repositories.utterance_repo - INFO - Successfully created utterance #1 for user soviet_jesus (139496479852068864)
+2026-01-11 19:07:05,929 - src.services.transcription - INFO - Transcribed utterance #1: soviet_jesus: "Open it. Act...." (0.46 confidence)
+2026-01-11 19:07:06,035 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:07:10,606 - faster_whisper - INFO - Processing audio with duration 00:05.000
+2026-01-11 19:07:10,856 - src.repositories.utterance_repo - INFO - Successfully created utterance #2 for user soviet_jesus (139496479852068864)
+2026-01-11 19:07:10,856 - src.services.transcription - INFO - Transcribed utterance #2: soviet_jesus: "or else you're going to be marked against you...." (0.54 confidence)
+2026-01-11 19:07:10,867 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:07:21,539 - faster_whisper - INFO - Processing audio with duration 00:10.920
+2026-01-11 19:07:22,013 - src.repositories.utterance_repo - INFO - Successfully created utterance #3 for user soviet_jesus (139496479852068864)
+2026-01-11 19:07:22,013 - src.services.transcription - INFO - Transcribed utterance #3: soviet_jesus: "it is logical warfare...." (0.41 confidence)
+2026-01-11 19:07:22,024 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:07:26,607 - faster_whisper - INFO - Processing audio with duration 00:05.080
+2026-01-11 19:07:27,131 - src.repositories.utterance_repo - INFO - Successfully created utterance #4 for user soviet_jesus (139496479852068864)
+2026-01-11 19:07:27,131 - src.services.transcription - INFO - Transcribed utterance #4: soviet_jesus: "so it's like you never know if you're doing the ri..." (0.69 confidence)
+2026-01-11 19:07:27,145 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:07:31,607 - faster_whisper - INFO - Processing audio with duration 00:05.000
+2026-01-11 19:07:32,123 - src.repositories.utterance_repo - INFO - Successfully created utterance #5 for user soviet_jesus (139496479852068864)
+2026-01-11 19:07:32,123 - src.services.transcription - INFO - Transcribed utterance #5: soviet_jesus: "I think that you're getting the right thing from t..." (0.52 confidence)
+2026-01-11 19:07:32,139 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:07:36,606 - faster_whisper - INFO - Processing audio with duration 00:05.000
+2026-01-11 19:07:36,937 - src.repositories.utterance_repo - INFO - Successfully created utterance #6 for user soviet_jesus (139496479852068864)
+2026-01-11 19:07:36,937 - src.services.transcription - INFO - Transcribed utterance #6: soviet_jesus: "I'm just trying to fire...." (0.41 confidence)
+2026-01-11 19:07:36,963 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:07:41,328 - faster_whisper - INFO - Processing audio with duration 00:04.720
+2026-01-11 19:07:41,511 - src.repositories.utterance_repo - INFO - Successfully created utterance #7 for user soviet_jesus (139496479852068864)
+2026-01-11 19:07:41,511 - src.services.transcription - INFO - Transcribed utterance #7: soviet_jesus: "really good...." (0.52 confidence)
+2026-01-11 19:07:41,539 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-11 19:07:45,342 - src.bot.client - INFO - Shutting down bot...
+2026-01-11 19:07:45,342 - src.bot.client - INFO - Stopping recording and disconnecting from General
+2026-01-11 19:07:45,342 - src.bot.client - INFO - Attempting to stop recording for channel: General
+2026-01-11 19:07:45,342 - src.bot.client - INFO - Voice client found: True
+2026-01-11 19:07:45,342 - src.bot.client - INFO - Voice client connected: True
+2026-01-11 19:07:45,342 - src.bot.client - INFO - Stopping recording on voice client
+2026-01-11 19:07:45,342 - src.bot.client - INFO - Disconnecting from voice channel
+2026-01-11 19:07:45,344 - discord.voice_client - INFO - Disconnecting from voice normally, close code 1000.
+2026-01-11 19:07:45,348 - src.bot.client - INFO - Recording callback called for channel General
+2026-01-11 19:07:45,373 - discord.voice_client - INFO - The voice handshake is being terminated for Channel ID 733522367623725101 (Guild ID 733522367141249066)
+2026-01-11 19:07:45,374 - src.bot.client - INFO - Successfully disconnected from voice channel
+2026-01-11 19:07:45,374 - src.bot.client - INFO - Stopped recording channel: General
+2026-01-11 19:07:45,375 - __main__ - INFO - Application shutdown complete
+2026-01-11 19:07:45,376 - __main__ - INFO - Shutdown requested
+2026-01-11 19:08:30,756 - __main__ - INFO - ======================================================================
+2026-01-11 19:08:30,757 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-11 19:08:30,757 - __main__ - INFO - ======================================================================
+2026-01-11 19:08:30,757 - __main__ - INFO - Transcription Provider: WHISPER
+2026-01-11 19:08:30,757 - __main__ - INFO - Whisper Model: large-v3
+2026-01-11 19:08:30,757 - __main__ - INFO - Whisper Device: cuda
+2026-01-11 19:08:30,757 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-11 19:08:30,757 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-11 19:08:30,757 - __main__ - INFO - Database: localhost:5433/discord_analyzer
+2026-01-11 19:08:30,757 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-11 19:08:30,757 - __main__ - INFO - Session Timeout: 300s
+2026-01-11 19:08:30,757 - __main__ - INFO - Log Level: INFO
+2026-01-11 19:08:30,757 - __main__ - INFO - Command Prefix: !
+2026-01-11 19:08:30,757 - __main__ - INFO - Features:
+2026-01-11 19:08:30,758 - __main__ - INFO -   - Transcription: True
+2026-01-11 19:08:30,758 - __main__ - INFO -   - Message Logging: True
+2026-01-11 19:08:30,758 - __main__ - INFO -   - Session Tracking: True
+2026-01-11 19:08:30,758 - __main__ - INFO - ======================================================================
+2026-01-11 19:08:30,758 - __main__ - INFO - Setting up database...
+2026-01-11 19:08:30,874 - __main__ - INFO - Database setup complete
+2026-01-11 19:08:30,875 - __main__ - INFO - Creating dependencies...
+2026-01-11 19:08:30,875 - src.providers.whisper_provider - INFO - Initializing Whisper model: large-v3 on cuda with float16
+2026-01-11 19:08:44,790 - src.providers.whisper_provider - INFO - Whisper model loaded successfully
+2026-01-11 19:08:44,791 - __main__ - INFO - Using Whisper transcription provider
+2026-01-11 19:08:44,791 - __main__ - INFO - Initializing vector database...
+2026-01-11 19:08:47,326 - src.providers.embedding_provider - INFO - Loading embedding model: all-MiniLM-L6-v2
+2026-01-11 19:08:47,326 - src.providers.embedding_provider - INFO - Using device: cuda
+2026-01-11 19:08:47,327 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-01-11 19:08:48,348 - src.providers.embedding_provider - INFO - Embedding model loaded: all-MiniLM-L6-v2 (dim=384)
+2026-01-11 19:08:48,428 - httpx - INFO - HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2026-01-11 19:08:48,451 - httpx - INFO - HTTP Request: GET http://localhost:6333/collections "HTTP/1.1 200 OK"
+2026-01-11 19:08:48,452 - src.providers.qdrant_provider - INFO - Collection already exists: utterances
+2026-01-11 19:08:48,452 - src.providers.qdrant_provider - INFO - Qdrant provider initialized: localhost:6333/utterances
+2026-01-11 19:08:48,452 - src.services.vector_service - INFO - Vector service initialized and enabled
+2026-01-11 19:08:48,452 - __main__ - INFO - Vector database initialized successfully
+2026-01-11 19:08:48,453 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x0000024A0C3BD110>
+2026-01-11 19:08:48,454 - __main__ - INFO - Semantic commands enabled
+2026-01-11 19:08:48,454 - __main__ - INFO - Dependencies created
+2026-01-11 19:08:48,454 - __main__ - INFO - Starting bot...
+2026-01-11 19:08:48,454 - discord.client - INFO - logging in using static token
+2026-01-11 19:08:48,968 - discord.gateway - INFO - Shard ID None has sent the IDENTIFY payload.
+2026-01-11 19:08:49,218 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-b-ht74",{"micros":221264,"calls":["id_created",{"micros":644,"calls":[]},"session_lookup_time",{"micros":313,"calls":[]},"session_lookup_finished",{"micros":12,"calls":[]},"discord-sessions-prd-2-25",{"micros":218919,"calls":["start_session",{"micros":174952,"calls":["discord-api-rpc-77cb85cc97-vhdlv",{"micros":108194,"calls":["get_user",{"micros":13448},"get_guilds",{"micros":3155},"send_scheduled_deletion_message",{"micros":13},"guild_join_requests",{"micros":2},"authorized_ip_coro",{"micros":10},"pending_payments",{"micros":748},"apex_experiments",{"micros":36076},"user_activities",{"micros":6},"played_application_ids",{"micros":4},"linked_users",{"micros":3},"ad_personalization_toggles_disabled",{"micros":4}]}]},"starting_guild_connect",{"micros":29,"calls":[]},"presence_started",{"micros":12979,"calls":[]},"guilds_started",{"micros":69,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":30862,"calls":[]},"connect_finished",{"micros":30875,"calls":[]},"build_ready",{"micros":12,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 92cf2f014d6daf3aa70c8ee1eeb36e14).
+2026-01-11 19:08:51,334 - src.bot.client - INFO - Logged in as CreepyBot#8389 (ID: 1459972521469280401)
+2026-01-11 19:08:51,335 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-11 19:11:14,641 - src.providers.qdrant_provider - ERROR - Search failed: 'QdrantClient' object has no attribute 'search'
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\src\providers\qdrant_provider.py", line 134, in search_similar
+    results = self.client.search(
+              ^^^^^^^^^^^^^^^^^^
+AttributeError: 'QdrantClient' object has no attribute 'search'
+2026-01-11 19:11:21,522 - src.providers.qdrant_provider - ERROR - Search failed: 'QdrantClient' object has no attribute 'search'
+Traceback (most recent call last):
+  File "D:\Code\discord-social-analyzer\src\providers\qdrant_provider.py", line 134, in search_similar
+    results = self.client.search(
+              ^^^^^^^^^^^^^^^^^^
+AttributeError: 'QdrantClient' object has no attribute 'search'
+2026-01-11 19:11:34,846 - httpx - INFO - HTTP Request: GET http://localhost:6333/collections/utterances "HTTP/1.1 200 OK"
+2026-01-11 19:11:34,847 - src.providers.qdrant_provider - ERROR - Failed to get collection info: 'CollectionInfo' object has no attribute 'vectors_count'
+2026-01-11 19:12:33,936 - src.bot.client - INFO - Shutting down bot...
+2026-01-11 19:12:33,937 - __main__ - INFO - Application shutdown complete
+2026-01-11 19:12:33,937 - __main__ - INFO - Shutdown requested
+2026-01-11 19:14:46,497 - __main__ - INFO - ======================================================================
+2026-01-11 19:14:46,497 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-11 19:14:46,497 - __main__ - INFO - ======================================================================
+2026-01-11 19:14:46,497 - __main__ - INFO - Transcription Provider: WHISPER
+2026-01-11 19:14:46,497 - __main__ - INFO - Whisper Model: large-v3
+2026-01-11 19:14:46,497 - __main__ - INFO - Whisper Device: cuda
+2026-01-11 19:14:46,497 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-11 19:14:46,497 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-11 19:14:46,497 - __main__ - INFO - Database: localhost:5433/discord_analyzer
+2026-01-11 19:14:46,497 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-11 19:14:46,497 - __main__ - INFO - Session Timeout: 300s
+2026-01-11 19:14:46,499 - __main__ - INFO - Log Level: INFO
+2026-01-11 19:14:46,499 - __main__ - INFO - Command Prefix: !
+2026-01-11 19:14:46,499 - __main__ - INFO - Features:
+2026-01-11 19:14:46,499 - __main__ - INFO -   - Transcription: True
+2026-01-11 19:14:46,499 - __main__ - INFO -   - Message Logging: True
+2026-01-11 19:14:46,499 - __main__ - INFO -   - Session Tracking: True
+2026-01-11 19:14:46,499 - __main__ - INFO - ======================================================================
+2026-01-11 19:14:46,500 - __main__ - INFO - Setting up database...
+2026-01-11 19:14:46,596 - __main__ - INFO - Database setup complete
+2026-01-11 19:14:46,597 - __main__ - INFO - Creating dependencies...
+2026-01-11 19:14:46,597 - src.providers.whisper_provider - INFO - Initializing Whisper model: large-v3 on cuda with float16
+2026-01-11 19:14:49,480 - src.providers.whisper_provider - INFO - Whisper model loaded successfully
+2026-01-11 19:14:49,481 - __main__ - INFO - Using Whisper transcription provider
+2026-01-11 19:14:49,481 - __main__ - INFO - Initializing vector database...
+2026-01-11 19:14:52,455 - src.providers.embedding_provider - INFO - Loading embedding model: all-MiniLM-L6-v2
+2026-01-11 19:14:52,456 - src.providers.embedding_provider - INFO - Using device: cuda
+2026-01-11 19:14:52,456 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-01-11 19:14:53,432 - src.providers.embedding_provider - INFO - Embedding model loaded: all-MiniLM-L6-v2 (dim=384)
+2026-01-11 19:14:53,536 - httpx - INFO - HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2026-01-11 19:14:53,570 - httpx - INFO - HTTP Request: GET http://localhost:6333/collections "HTTP/1.1 200 OK"
+2026-01-11 19:14:53,570 - src.providers.qdrant_provider - INFO - Collection already exists: utterances
+2026-01-11 19:14:53,571 - src.providers.qdrant_provider - INFO - Qdrant provider initialized: localhost:6333/utterances
+2026-01-11 19:14:53,571 - src.services.vector_service - INFO - Vector service initialized and enabled
+2026-01-11 19:14:53,571 - __main__ - INFO - Vector database initialized successfully
+2026-01-11 19:14:53,571 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x000002718C0D1E50>
+2026-01-11 19:14:53,573 - __main__ - INFO - Semantic commands enabled
+2026-01-11 19:14:53,573 - __main__ - INFO - Dependencies created
+2026-01-11 19:14:53,573 - __main__ - INFO - Starting bot...
+2026-01-11 19:14:53,573 - discord.client - INFO - logging in using static token
+2026-01-11 19:15:04,984 - discord.gateway - INFO - Shard ID None has sent the IDENTIFY payload.
+2026-01-11 19:15:05,098 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-b-0ftl",{"micros":86793,"calls":["id_created",{"micros":591,"calls":[]},"session_lookup_time",{"micros":2878,"calls":[]},"session_lookup_finished",{"micros":25,"calls":[]},"discord-sessions-prd-2-160",{"micros":82853,"calls":["start_session",{"micros":77024,"calls":["discord-api-rpc-77cb85cc97-967wd",{"micros":42912,"calls":["get_user",{"micros":6749},"get_guilds",{"micros":4633},"send_scheduled_deletion_message",{"micros":22},"guild_join_requests",{"micros":4},"authorized_ip_coro",{"micros":9},"pending_payments",{"micros":437},"apex_experiments",{"micros":27290},"user_activities",{"micros":5},"played_application_ids",{"micros":2},"linked_users",{"micros":2},"ad_personalization_toggles_disabled",{"micros":2}]}]},"starting_guild_connect",{"micros":50,"calls":[]},"presence_started",{"micros":291,"calls":[]},"guilds_started",{"micros":65,"calls":[]},"lobbies_started",{"micros":2,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":5385,"calls":[]},"connect_finished",{"micros":5397,"calls":[]},"build_ready",{"micros":14,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 37be636e4606d4251ab25998ee838f16).
+2026-01-11 19:15:07,216 - src.bot.client - INFO - Logged in as CreepyBot#8389 (ID: 1459972521469280401)
+2026-01-11 19:15:07,217 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-11 19:15:10,726 - httpx - INFO - HTTP Request: POST http://localhost:6333/collections/utterances/points/query "HTTP/1.1 200 OK"
+2026-01-11 19:16:44,851 - src.bot.client - INFO - Shutting down bot...
+2026-01-11 19:16:44,853 - __main__ - INFO - Application shutdown complete
+2026-01-11 19:16:44,854 - __main__ - INFO - Shutdown requested
