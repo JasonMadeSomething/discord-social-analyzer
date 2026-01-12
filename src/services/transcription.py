@@ -111,6 +111,9 @@ class TranscriptionService:
         
         # Background task for monitoring stale buffers
         self._monitor_task: Optional[asyncio.Task] = None
+        
+        # Lock for provider swapping to ensure thread safety
+        self._provider_swap_lock = asyncio.Lock()
     
     async def add_audio(
         self,
@@ -292,3 +295,54 @@ class TranscriptionService:
             except Exception as e:
                 logger.error(f"Error in buffer monitor: {e}")
                 await asyncio.sleep(1)
+    
+    async def swap_provider(self, new_provider: ITranscriptionProvider) -> dict:
+        """
+        Hot-swap the transcription provider without restarting.
+        
+        This method:
+        1. Processes all in-flight buffers with the current provider
+        2. Swaps to the new provider
+        3. New audio will use the new provider
+        
+        Args:
+            new_provider: The new transcription provider instance
+            
+        Returns:
+            dict with swap statistics (buffers_processed, provider_name)
+        """
+        async with self._provider_swap_lock:
+            old_provider_name = type(self.transcription_provider).__name__
+            new_provider_name = type(new_provider).__name__
+            
+            logger.info(f"Starting provider swap: {old_provider_name} -> {new_provider_name}")
+            
+            # Process all in-flight buffers with the current provider
+            buffers_processed = 0
+            for channel_id in list(self._buffers.keys()):
+                for user_id in list(self._buffers[channel_id].keys()):
+                    buffer = self._buffers[channel_id][user_id]
+                    
+                    # Process buffer if it has any audio data
+                    if len(buffer.audio_data) > 0:
+                        logger.info(f"Processing in-flight buffer for user {user_id} with {old_provider_name}")
+                        await self._process_buffer(channel_id, user_id)
+                        buffers_processed += 1
+            
+            # Swap the provider
+            self.transcription_provider = new_provider
+            
+            logger.info(
+                f"Provider swap complete: {old_provider_name} -> {new_provider_name}. "
+                f"Processed {buffers_processed} in-flight buffer(s)."
+            )
+            
+            return {
+                'old_provider': old_provider_name,
+                'new_provider': new_provider_name,
+                'buffers_processed': buffers_processed
+            }
+    
+    def get_current_provider(self) -> str:
+        """Get the name of the current transcription provider."""
+        return type(self.transcription_provider).__name__

@@ -184,21 +184,28 @@ class DiscordBot(commands.Bot):
         after: discord.VoiceState
     ):
         """Handle voice state changes (join/leave/move)."""
-        # User joined a channel
-        if before.channel is None and after.channel is not None:
-            await self._handle_user_join(member, after.channel)
+        # Only track users in channels where the bot is already recording
+        # Don't auto-join channels anymore - require manual summon
         
-        # User left a channel
+        # User joined a channel where bot is recording
+        if before.channel is None and after.channel is not None:
+            if after.channel.id in self._recording_channels:
+                await self._handle_user_join(member, after.channel)
+        
+        # User left a channel where bot is recording
         elif before.channel is not None and after.channel is None:
-            await self._handle_user_leave(member, before.channel)
+            if before.channel.id in self._recording_channels:
+                await self._handle_user_leave(member, before.channel)
         
         # User moved channels
         elif before.channel != after.channel:
-            await self._handle_user_leave(member, before.channel)
-            await self._handle_user_join(member, after.channel)
+            if before.channel and before.channel.id in self._recording_channels:
+                await self._handle_user_leave(member, before.channel)
+            if after.channel and after.channel.id in self._recording_channels:
+                await self._handle_user_join(member, after.channel)
     
     async def _handle_user_join(self, member: discord.Member, channel: discord.VoiceChannel):
-        """Handle user joining a voice channel."""
+        """Handle user joining a voice channel where bot is already recording."""
         logger.info(f"{member.name} joined {channel.name}")
         
         # Skip if it's the bot itself
@@ -206,7 +213,7 @@ class DiscordBot(commands.Bot):
             logger.info("Bot joined channel, not adding as participant")
             return
         
-        # Get or create session
+        # Get or create session (should already exist if bot is recording)
         session_id = self.session_manager.get_active_session(channel.id)
         if not session_id:
             session_id = self.session_manager.start_session(
@@ -215,17 +222,13 @@ class DiscordBot(commands.Bot):
                 guild_id=channel.guild.id
             )
         
-        # Add participant (bot is already filtered out above)
+        # Add participant
         self.session_manager.add_participant(
             channel_id=channel.id,
             user_id=member.id,
             username=member.name,
             display_name=member.display_name or member.name
         )
-        
-        # Start recording if not already
-        if channel.id not in self._recording_channels:
-            await self._start_recording(channel)
     
     async def _handle_user_leave(self, member: discord.Member, channel: discord.VoiceChannel):
         """Handle user leaving a voice channel."""

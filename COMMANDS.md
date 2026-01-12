@@ -2,6 +2,109 @@
 
 Complete list of available bot commands with examples.
 
+## Voice Control Commands
+
+### !summon (or !join)
+Summon the bot to your current voice channel.
+
+**Example:**
+```
+!summon
+!join
+```
+
+**Requirements:**
+- You must be in a voice channel
+- Bot must not already be in another channel
+
+**Output:**
+- Bot joins your voice channel
+- Starts recording and transcribing
+- Creates a session for all current participants
+
+**Note:** The bot no longer auto-joins when users enter voice channels. You must explicitly summon it.
+
+---
+
+### !dismiss (or !leave, !stop)
+Dismiss the bot from the voice channel.
+
+**Example:**
+```
+!dismiss
+!leave
+!stop
+```
+
+**Output:**
+- Bot stops recording
+- Leaves the voice channel
+- Session remains in database for analysis
+
+---
+
+### !move
+Move the bot to your current voice channel.
+
+**Example:**
+```
+!move
+```
+
+**Requirements:**
+- You must be in a voice channel
+
+**Output:**
+- Bot leaves current channel
+- Joins your voice channel
+- Starts new recording session
+
+**Use case:** Quickly relocate the bot without using !dismiss then !summon.
+
+---
+
+### !swapprovider <provider> (or !switchprovider)
+Hot-swap the transcription provider without restarting.
+
+**Example:**
+```
+!swapprovider whisper
+!swapprovider vosk
+!switchprovider whisper
+```
+
+**Options:**
+- `whisper` - High accuracy, GPU recommended
+- `vosk` - Fast, CPU-friendly, offline
+
+**How it works:**
+1. Processes all in-flight audio buffers with current provider
+2. Switches to the new provider
+3. All new audio uses the new provider
+
+**Output:**
+- Statistics on buffers processed
+- Confirmation of provider change
+
+**Use case:** Switch between accuracy (Whisper) and speed (Vosk) on-the-fly without restarting the bot.
+
+---
+
+### !provider
+Show the current transcription provider.
+
+**Example:**
+```
+!provider
+```
+
+**Output:**
+- Current provider name
+- Provider description
+- Hint to use !swapprovider
+
+---
+
 ## Basic Commands
 
 ### !stats [session_number]

@@ -175,6 +175,12 @@ class Application:
         bot.add_cog(advanced_commands_cog)
         bot.add_cog(deep_analysis_cog)
         
+        # Add voice control commands
+        from src.bot.voice_commands import VoiceCommands
+        voice_commands_cog = VoiceCommands(bot=bot)
+        bot.add_cog(voice_commands_cog)
+        logger.info("Voice control commands enabled")
+        
         # Add semantic search commands (if vector service is enabled)
         if vector_service:
             from src.bot.semantic_commands import SemanticCommands
