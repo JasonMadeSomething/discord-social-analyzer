@@ -4,13 +4,12 @@ Complete list of available bot commands with examples.
 
 ## Voice Control Commands
 
-### !summon (or !join)
+### /summon
 Summon the bot to your current voice channel.
 
 **Example:**
 ```
-!summon
-!join
+/summon
 ```
 
 **Requirements:**
@@ -26,14 +25,12 @@ Summon the bot to your current voice channel.
 
 ---
 
-### !dismiss (or !leave, !stop)
+### /dismiss
 Dismiss the bot from the voice channel.
 
 **Example:**
 ```
-!dismiss
-!leave
-!stop
+/dismiss
 ```
 
 **Output:**
@@ -43,12 +40,12 @@ Dismiss the bot from the voice channel.
 
 ---
 
-### !move
+### /move
 Move the bot to your current voice channel.
 
 **Example:**
 ```
-!move
+/move
 ```
 
 **Requirements:**
@@ -59,18 +56,17 @@ Move the bot to your current voice channel.
 - Joins your voice channel
 - Starts new recording session
 
-**Use case:** Quickly relocate the bot without using !dismiss then !summon.
+**Use case:** Quickly relocate the bot without using /dismiss then /summon.
 
 ---
 
-### !swapprovider <provider> (or !switchprovider)
+### /swapprovider <provider>
 Hot-swap the transcription provider without restarting.
 
 **Example:**
 ```
-!swapprovider whisper
-!swapprovider vosk
-!switchprovider whisper
+/swapprovider whisper
+/swapprovider vosk
 ```
 
 **Options:**
@@ -90,30 +86,30 @@ Hot-swap the transcription provider without restarting.
 
 ---
 
-### !provider
+### /provider
 Show the current transcription provider.
 
 **Example:**
 ```
-!provider
+/provider
 ```
 
 **Output:**
 - Current provider name
 - Provider description
-- Hint to use !swapprovider
+- Hint to use /swapprovider
 
 ---
 
 ## Basic Commands
 
-### !stats [session_number]
+### /stats [session_number]
 View basic statistics for a session.
 
 **Example:**
 ```
-!stats
-!stats 2
+/stats
+/stats 2
 ```
 
 **Output:**
@@ -124,14 +120,14 @@ View basic statistics for a session.
 
 ---
 
-### !transcript [session_number] [limit]
+### /transcript [session_number] [limit]
 Get chronological transcript of conversations.
 
 **Example:**
 ```
-!transcript
-!transcript 1 100
-!transcript 3 50
+/transcript
+/transcript 1 100
+/transcript 3 50
 ```
 
 **Output:**
@@ -141,13 +137,13 @@ Get chronological transcript of conversations.
 
 ---
 
-### !search <query>
+### /search <query>
 Search utterances by text content.
 
 **Example:**
 ```
-!search machine learning
-!search "project deadline"
+/search machine learning
+/search "project deadline"
 ```
 
 **Output:**
@@ -157,14 +153,14 @@ Search utterances by text content.
 
 ---
 
-### !sessions [limit] [--summary]
+### /sessions [limit] [show_summary]
 List recent sessions.
 
 **Example:**
 ```
-!sessions
-!sessions 20
-!sessions 10 --summary
+/sessions
+/sessions limit:20
+/sessions limit:10 show_summary:true
 ```
 
 **Output:**
@@ -183,13 +179,13 @@ List recent sessions.
 
 ## Advanced Analysis Commands
 
-### !analyze [session_number]
+### /analyze [session_number]
 Comprehensive analysis with all metrics.
 
 **Example:**
 ```
-!analyze
-!analyze 2
+/analyze
+/analyze session_number:2
 ```
 
 **Output:**
@@ -201,13 +197,13 @@ Comprehensive analysis with all metrics.
 
 ---
 
-### !speaking [session_number]
+### /speaking [session_number]
 Detailed speaking pattern analysis.
 
 **Example:**
 ```
-!speaking
-!speaking 1
+/speaking
+/speaking session_number:31
 ```
 
 **Output:**
@@ -224,13 +220,13 @@ Detailed speaking pattern analysis.
 
 ---
 
-### !turns [session_number]
+### /turns [session_number]
 Turn-taking pattern analysis.
 
 **Example:**
 ```
-!turns
-!turns 3
+/turns
+/turns session_number:23
 ```
 
 **Output:**
@@ -246,13 +242,13 @@ Turn-taking pattern analysis.
 
 ---
 
-### !interactions [session_number]
+### /interactions [session_number]
 Analyze who interacts with whom.
 
 **Example:**
 ```
-!interactions
-!interactions 1
+/interactions
+/interactions session_number:21
 ```
 
 **Output:**
@@ -269,14 +265,14 @@ Analyze who interacts with whom.
 
 ---
 
-### !keywords [session_number] [count]
+### /keywords [session_number] [count]
 Extract most common keywords from conversation.
 
 **Example:**
 ```
-!keywords
-!keywords 1 30
-!keywords 2 15
+/keywords
+/keywords count:30
+/keywords session_number:2 count:15
 ```
 
 **Output:**
@@ -291,13 +287,13 @@ Extract most common keywords from conversation.
 
 ---
 
-### !myactivity [session_count]
+### /myactivity [session_count]
 View your personal participation across recent sessions.
 
 **Example:**
 ```
-!myactivity
-!myactivity 10
+/myactivity
+/myactivity session_count:10
 ```
 
 **Output:**
@@ -314,13 +310,13 @@ View your personal participation across recent sessions.
 
 ---
 
-### !export [session_number]
+### /export [session_number]
 Export full analysis as JSON file.
 
 **Example:**
 ```
-!export
-!export 2
+/export
+/export session_number:2
 ```
 
 **Output:**
@@ -336,14 +332,14 @@ Export full analysis as JSON file.
 
 ---
 
-### !topics [session_number] [num_topics]
+### /topics [session_number] [num_topics]
 Identify conversation topics using keyword clustering.
 
 **Example:**
 ```
-!topics
-!topics 1 5
-!topics 2 3
+/topics
+/topics num_topics:3
+/topics session_number:2 num_topics:73
 ```
 
 **Output:**
@@ -359,13 +355,13 @@ Identify conversation topics using keyword clustering.
 
 ---
 
-### !recap [session_number]
+### /recap [session_number]
 Generate a structured recap of the conversation.
 
 **Example:**
 ```
-!recap
-!recap 1
+/recap
+/recap session_number:21
 ```
 
 **Output:**
@@ -382,13 +378,13 @@ Generate a structured recap of the conversation.
 
 ---
 
-### !dynamics [session_number]
+### /dynamics [session_number]
 Analyze social dynamics and conversation flow.
 
 **Example:**
 ```
-!dynamics
-!dynamics 2
+/dynamics
+/dynamics session_number:2
 ```
 
 **Output:**
@@ -411,13 +407,13 @@ Analyze social dynamics and conversation flow.
 
 ---
 
-### !influence [session_number]
+### /influence [session_number]
 Show influence scores - who drives the conversation.
 
 **Example:**
 ```
-!influence
-!influence 1
+/influence
+/influence session_number:21
 ```
 
 **Output:**
@@ -439,12 +435,12 @@ Show influence scores - who drives the conversation.
 
 ---
 
-### !help_analyzer
+### /help
 Show command help and usage.
 
 **Example:**
 ```
-!help_analyzer
+/help
 ```
 
 ---
@@ -488,37 +484,37 @@ Extracted using word frequency after filtering:
 ## Interpreting Results
 
 ### Healthy Conversation Signs
-- ✅ Dominance score < 0.4
-- ✅ Response times 1-3 seconds
-- ✅ High interaction counts for all participants
-- ✅ Balanced turn-taking
-- ✅ Even speaking time distribution
+- Dominance score < 0.4
+- Response times 1-3 seconds
+- High interaction counts for all participants
+- Balanced turn-taking
+- Even speaking time distribution
 
 ### Red Flags
-- ⚠️ Dominance score > 0.7
-- ⚠️ One person has >60% speaking time
-- ⚠️ Low interaction counts for some participants
-- ⚠️ Very few turns taken by most people
-- ⚠️ Extreme response times (too fast = interruptions, too slow = disengagement)
+- Dominance score > 0.7
+- One person has >60% speaking time
+- Low interaction counts for some participants
+- Very few turns taken by most people
+- Extreme response times (too fast = interruptions, too slow = disengagement)
 
 ## Tips for Using Commands
 
-1. **Start with !analyze** - gives you the overview
+1. **Start with /analyze** - gives you the overview
 2. **Drill down** - use specific commands for details
-3. **Compare sessions** - use !myactivity to see trends
-4. **Export for deep analysis** - use !export for custom processing
+3. **Compare sessions** - use /myactivity to see trends
+4. **Export for deep analysis** - use /export for custom processing
 5. **Check keywords** - quickly understand topics without reading transcript
 
 ## Command Chaining Example
 
 ```
 # Quick workflow to understand a session:
-!sessions                    # Find session number
-!analyze 1                   # Get overview
-!speaking 1                  # Check if balanced
-!keywords 1 20              # See what was discussed
-!transcript 1 30            # Read interesting parts
-!export 1                   # Save for later
+/sessions                    # Find session number
+/analyze 1                   # Get overview
+/speaking 1                  # Check if balanced
+/keywords 1 20              # See what was discussed
+/transcript 1 30            # Read interesting parts
+/export 1                   # Save for later
 ```
 
 ---
@@ -527,14 +523,14 @@ Extracted using word frequency after filtering:
 
 These commands require Qdrant to be enabled (`QDRANT_ENABLED=true` in `.env`).
 
-### !semantic <query>
+### /semantic <query>
 Search conversations by meaning, not just keywords.
 
 **Example:**
 ```
-!semantic machine learning algorithms
-!semantic project deadlines
-!semantic debugging issues
+/semantic query:machine learning algorithms
+/semantic query:what did we discuss about the project?
+/semantic query:debugging issues
 ```
 
 **Output:**
@@ -555,12 +551,12 @@ Search conversations by meaning, not just keywords.
 
 ---
 
-### !vectorstats
+### /vectorstats
 Show vector database statistics.
 
 **Example:**
 ```
-!vectorstats
+/vectorstats
 ```
 
 **Output:**
@@ -576,12 +572,12 @@ Show vector database statistics.
 
 ---
 
-### !topicmap
+### /topicmap
 Topic clustering and mapping (coming soon).
 
 **Example:**
 ```
-!topicmap
+/topicmap
 ```
 
 **Status:** Placeholder for future UMAP/HDBSCAN clustering implementation.
@@ -594,12 +590,12 @@ Topic clustering and mapping (coming soon).
 
 ---
 
-### !similar <utterance_id>
+### /similar <utterance_id>
 Find utterances similar to a specific one (coming soon).
 
 **Example:**
 ```
-!similar 42
+/similar utterance_id:42
 ```
 
 **Status:** Placeholder for future implementation.

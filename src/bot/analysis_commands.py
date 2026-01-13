@@ -1,5 +1,6 @@
 from discord.ext import commands
 import discord
+from discord import ApplicationContext, Option
 import json
 import logging
 
@@ -22,7 +23,7 @@ class AdvancedAnalysisCommands(commands.Cog):
         self.analyzer = analyzer
         self.session_repo = session_repo
     
-    def _get_session_id(self, ctx: commands.Context, session_index: int = 1) -> str:
+    def _get_session_id(self, ctx: ApplicationContext, session_index: int = 1) -> str:
         """Helper to get session ID from context."""
         # Try to find active session first
         voice_channel_id = None
@@ -46,20 +47,28 @@ class AdvancedAnalysisCommands(commands.Cog):
         
         return sessions[session_index - 1].session_id
     
-    @commands.command(name='analyze')
-    async def full_analysis(self, ctx: commands.Context, session_index: int = 1):
-        """
-        Get comprehensive analysis of a session.
-        Usage: !analyze [session_number]
-        """
+    @discord.slash_command(
+        name="analyze",
+        description="Get comprehensive analysis of a session"
+    )
+    async def full_analysis(
+        self,
+        ctx: ApplicationContext,
+        session_number: Option(
+            int,
+            description="Session number (1 = most recent)",
+            required=False,
+            default=1
+        )
+    ):
         try:
-            session_id = self._get_session_id(ctx, session_index)
+            session_id = self._get_session_id(ctx, session_number)
             
             if not session_id:
-                await ctx.send("No session found.")
+                await ctx.respond("No session found.")
                 return
             
-            await ctx.send("🔍 Analyzing session... This may take a moment.")
+            await ctx.respond("🔍 Analyzing session... This may take a moment.")
             
             # Generate full analysis
             summary = self.analyzer.generate_session_summary(session_id)
@@ -155,23 +164,31 @@ class AdvancedAnalysisCommands(commands.Cog):
                     inline=False
                 )
             
-            await ctx.send(embed=embed)
+            await ctx.followup.send(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in analyze command: {e}", exc_info=True)
-            await ctx.send(f"Error during analysis: {str(e)}")
+            await ctx.followup.send(f"Error during analysis: {str(e)}")
     
-    @commands.command(name='speaking')
-    async def speaking_patterns(self, ctx: commands.Context, session_index: int = 1):
-        """
-        Detailed speaking pattern analysis.
-        Usage: !speaking [session_number]
-        """
+    @discord.slash_command(
+        name="speaking",
+        description="Detailed speaking pattern analysis"
+    )
+    async def speaking_patterns(
+        self,
+        ctx: ApplicationContext,
+        session_number: Option(
+            int,
+            description="Session number (1 = most recent)",
+            required=False,
+            default=1
+        )
+    ):
         try:
-            session_id = self._get_session_id(ctx, session_index)
+            session_id = self._get_session_id(ctx, session_number)
             
             if not session_id:
-                await ctx.send("No session found.")
+                await ctx.respond("No session found.")
                 return
             
             patterns = self.analyzer.analyze_speaking_patterns(session_id)
@@ -214,23 +231,31 @@ class AdvancedAnalysisCommands(commands.Cog):
                 inline=False
             )
             
-            await ctx.send(embed=embed)
+            await ctx.respond(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in speaking command: {e}", exc_info=True)
-            await ctx.send(f"Error analyzing speaking patterns: {str(e)}")
+            await ctx.respond(f"Error analyzing speaking patterns: {str(e)}")
     
-    @commands.command(name='turns')
-    async def turn_taking(self, ctx: commands.Context, session_index: int = 1):
-        """
-        Analyze turn-taking patterns.
-        Usage: !turns [session_number]
-        """
+    @discord.slash_command(
+        name="turns",
+        description="Analyze turn-taking patterns"
+    )
+    async def turn_taking(
+        self,
+        ctx: ApplicationContext,
+        session_number: Option(
+            int,
+            description="Session number (1 = most recent)",
+            required=False,
+            default=1
+        )
+    ):
         try:
-            session_id = self._get_session_id(ctx, session_index)
+            session_id = self._get_session_id(ctx, session_number)
             
             if not session_id:
-                await ctx.send("No session found.")
+                await ctx.respond("No session found.")
                 return
             
             turn_data = self.analyzer.analyze_turn_taking(session_id)
@@ -291,23 +316,31 @@ class AdvancedAnalysisCommands(commands.Cog):
                         inline=False
                     )
             
-            await ctx.send(embed=embed)
+            await ctx.respond(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in turns command: {e}", exc_info=True)
-            await ctx.send(f"Error analyzing turn-taking: {str(e)}")
+            await ctx.respond(f"Error analyzing turn-taking: {str(e)}")
     
-    @commands.command(name='interactions')
-    async def interactions(self, ctx: commands.Context, session_index: int = 1):
-        """
-        Analyze interaction patterns (who responds to whom).
-        Usage: !interactions [session_number]
-        """
+    @discord.slash_command(
+        name="interactions",
+        description="Analyze interaction patterns (who responds to whom)"
+    )
+    async def interactions(
+        self,
+        ctx: ApplicationContext,
+        session_number: Option(
+            int,
+            description="Session number (1 = most recent)",
+            required=False,
+            default=1
+        )
+    ):
         try:
-            session_id = self._get_session_id(ctx, session_index)
+            session_id = self._get_session_id(ctx, session_number)
             
             if not session_id:
-                await ctx.send("No session found.")
+                await ctx.respond("No session found.")
                 return
             
             interaction_data = self.analyzer.analyze_interactions(session_id)
@@ -354,29 +387,43 @@ class AdvancedAnalysisCommands(commands.Cog):
                         inline=False
                     )
             
-            await ctx.send(embed=embed)
+            await ctx.respond(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in interactions command: {e}", exc_info=True)
-            await ctx.send(f"Error analyzing interactions: {str(e)}")
+            await ctx.respond(f"Error analyzing interactions: {str(e)}")
     
-    @commands.command(name='keywords')
-    async def keywords(self, ctx: commands.Context, session_index: int = 1, top_n: int = 20):
-        """
-        Extract most common keywords from a session.
-        Usage: !keywords [session_number] [count]
-        """
+    @discord.slash_command(
+        name="keywords",
+        description="Extract most common keywords from a session"
+    )
+    async def keywords(
+        self,
+        ctx: ApplicationContext,
+        session_number: Option(
+            int,
+            description="Session number (1 = most recent)",
+            required=False,
+            default=1
+        ),
+        count: Option(
+            int,
+            description="Number of keywords to show",
+            required=False,
+            default=20
+        )
+    ):
         try:
-            session_id = self._get_session_id(ctx, session_index)
+            session_id = self._get_session_id(ctx, session_number)
             
             if not session_id:
-                await ctx.send("No session found.")
+                await ctx.respond("No session found.")
                 return
             
-            keywords = self.analyzer.extract_keywords(session_id, top_n=top_n)
+            keywords = self.analyzer.extract_keywords(session_id, top_n=count)
             
             if not keywords:
-                await ctx.send("No keywords found.")
+                await ctx.respond("No keywords found.")
                 return
             
             embed = discord.Embed(
@@ -409,28 +456,36 @@ class AdvancedAnalysisCommands(commands.Cog):
                     inline=True
                 )
             
-            await ctx.send(embed=embed)
+            await ctx.respond(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in keywords command: {e}", exc_info=True)
-            await ctx.send(f"Error extracting keywords: {str(e)}")
+            await ctx.respond(f"Error extracting keywords: {str(e)}")
     
-    @commands.command(name='myactivity')
-    async def user_activity(self, ctx: commands.Context, limit: int = 5):
-        """
-        View your participation across recent sessions.
-        Usage: !myactivity [session_count]
-        """
+    @discord.slash_command(
+        name="myactivity",
+        description="View your participation across recent sessions"
+    )
+    async def user_activity(
+        self,
+        ctx: ApplicationContext,
+        session_count: Option(
+            int,
+            description="Number of recent sessions to analyze",
+            required=False,
+            default=5
+        )
+    ):
         try:
             user_id = ctx.author.id
             
             comparison = self.analyzer.compare_user_across_sessions(
                 user_id=user_id,
-                limit=limit
+                limit=session_count
             )
             
             if comparison['sessions_analyzed'] == 0:
-                await ctx.send("No activity found for you.")
+                await ctx.respond("No activity found for you.")
                 return
             
             embed = discord.Embed(
@@ -462,23 +517,31 @@ class AdvancedAnalysisCommands(commands.Cog):
                     inline=True
                 )
             
-            await ctx.send(embed=embed)
+            await ctx.respond(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in myactivity command: {e}", exc_info=True)
-            await ctx.send(f"Error retrieving activity: {str(e)}")
+            await ctx.respond(f"Error retrieving activity: {str(e)}")
     
-    @commands.command(name='export')
-    async def export_analysis(self, ctx: commands.Context, session_index: int = 1):
-        """
-        Export full analysis as JSON.
-        Usage: !export [session_number]
-        """
+    @discord.slash_command(
+        name="export",
+        description="Export full analysis as JSON file"
+    )
+    async def export_analysis(
+        self,
+        ctx: ApplicationContext,
+        session_number: Option(
+            int,
+            description="Session number (1 = most recent)",
+            required=False,
+            default=1
+        )
+    ):
         try:
-            session_id = self._get_session_id(ctx, session_index)
+            session_id = self._get_session_id(ctx, session_number)
             
             if not session_id:
-                await ctx.send("No session found.")
+                await ctx.respond("No session found.")
                 return
             
             summary = self.analyzer.generate_session_summary(session_id)
@@ -492,14 +555,14 @@ class AdvancedAnalysisCommands(commands.Cog):
                 f.write(json_data)
             
             # Send file
-            await ctx.send(
+            await ctx.respond(
                 "📊 Analysis exported:",
                 file=discord.File(filename)
             )
             
         except Exception as e:
             logger.error(f"Error in export command: {e}", exc_info=True)
-            await ctx.send(f"Error exporting analysis: {str(e)}")
+            await ctx.respond(f"Error exporting analysis: {str(e)}")
 
 
 async def setup(bot: commands.Bot):

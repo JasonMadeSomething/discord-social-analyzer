@@ -4123,3 +4123,249 @@ AttributeError: 'QdrantClient' object has no attribute 'search'
 2026-01-11 19:16:44,851 - src.bot.client - INFO - Shutting down bot...
 2026-01-11 19:16:44,853 - __main__ - INFO - Application shutdown complete
 2026-01-11 19:16:44,854 - __main__ - INFO - Shutdown requested
+2026-01-13 02:33:29,975 - __main__ - INFO - ======================================================================
+2026-01-13 02:33:29,975 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-13 02:33:29,976 - __main__ - INFO - ======================================================================
+2026-01-13 02:33:29,976 - __main__ - INFO - Transcription Provider: WHISPER
+2026-01-13 02:33:29,976 - __main__ - INFO - Whisper Model: large-v3
+2026-01-13 02:33:29,976 - __main__ - INFO - Whisper Device: cuda
+2026-01-13 02:33:29,976 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-13 02:33:29,976 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-13 02:33:29,976 - __main__ - INFO - Database: localhost:5433/discord_analyzer
+2026-01-13 02:33:29,976 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-13 02:33:29,976 - __main__ - INFO - Session Timeout: 300s
+2026-01-13 02:33:29,976 - __main__ - INFO - Log Level: INFO
+2026-01-13 02:33:29,976 - __main__ - INFO - Command Prefix: !
+2026-01-13 02:33:29,976 - __main__ - INFO - Features:
+2026-01-13 02:33:29,976 - __main__ - INFO -   - Transcription: True
+2026-01-13 02:33:29,977 - __main__ - INFO -   - Message Logging: True
+2026-01-13 02:33:29,977 - __main__ - INFO -   - Session Tracking: True
+2026-01-13 02:33:29,977 - __main__ - INFO - ======================================================================
+2026-01-13 02:33:29,977 - __main__ - INFO - Setting up database...
+2026-01-13 02:33:30,287 - __main__ - INFO - Database setup complete
+2026-01-13 02:33:30,287 - __main__ - INFO - Creating dependencies...
+2026-01-13 02:33:30,287 - src.providers.whisper_provider - INFO - Initializing Whisper model: large-v3 on cuda with float16
+2026-01-13 02:33:44,877 - src.providers.whisper_provider - INFO - Whisper model loaded successfully
+2026-01-13 02:33:44,878 - __main__ - INFO - Using Whisper transcription provider
+2026-01-13 02:33:44,878 - __main__ - INFO - Initializing vector database...
+2026-01-13 02:33:52,269 - src.providers.embedding_provider - INFO - Loading embedding model: all-MiniLM-L6-v2
+2026-01-13 02:33:52,269 - src.providers.embedding_provider - INFO - Using device: cuda
+2026-01-13 02:33:52,271 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-01-13 02:33:53,319 - src.providers.embedding_provider - INFO - Embedding model loaded: all-MiniLM-L6-v2 (dim=384)
+2026-01-13 02:33:53,423 - httpx - INFO - HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2026-01-13 02:33:53,431 - httpx - INFO - HTTP Request: GET http://localhost:6333/collections "HTTP/1.1 200 OK"
+2026-01-13 02:33:53,432 - src.providers.qdrant_provider - INFO - Collection already exists: utterances
+2026-01-13 02:33:53,432 - src.providers.qdrant_provider - INFO - Qdrant provider initialized: localhost:6333/utterances
+2026-01-13 02:33:53,432 - src.services.vector_service - INFO - Vector service initialized and enabled
+2026-01-13 02:33:53,432 - __main__ - INFO - Vector database initialized successfully
+2026-01-13 02:33:53,433 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x000001DB0C4135D0>
+2026-01-13 02:33:53,436 - __main__ - INFO - Voice control commands enabled
+2026-01-13 02:33:53,439 - __main__ - INFO - Semantic commands enabled
+2026-01-13 02:33:53,439 - __main__ - INFO - Dependencies created
+2026-01-13 02:33:53,439 - __main__ - INFO - Starting bot...
+2026-01-13 02:33:53,439 - discord.client - INFO - logging in using static token
+2026-01-13 02:34:04,842 - discord.gateway - INFO - Shard ID None has sent the IDENTIFY payload.
+2026-01-13 02:34:04,972 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-d-130q",{"micros":102273,"calls":["id_created",{"micros":596,"calls":[]},"session_lookup_time",{"micros":185,"calls":[]},"session_lookup_finished",{"micros":11,"calls":[]},"discord-sessions-prd-2-69",{"micros":101170,"calls":["start_session",{"micros":72523,"calls":["discord-api-rpc-5858fd7d6c-4h9ln",{"micros":38876,"calls":["get_user",{"micros":5072},"get_guilds",{"micros":3337},"send_scheduled_deletion_message",{"micros":12},"guild_join_requests",{"micros":7},"authorized_ip_coro",{"micros":12},"pending_payments",{"micros":631},"apex_experiments",{"micros":25997},"user_activities",{"micros":7},"played_application_ids",{"micros":4},"linked_users",{"micros":3},"ad_personalization_toggles_disabled",{"micros":3}]}]},"starting_guild_connect",{"micros":64,"calls":[]},"presence_started",{"micros":11052,"calls":[]},"guilds_started",{"micros":57,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":17444,"calls":[]},"connect_finished",{"micros":17459,"calls":[]},"build_ready",{"micros":12,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 3752cd912d669401ff63c04699f95c86).
+2026-01-13 02:34:07,095 - src.bot.client - INFO - Logged in as CreepyBot#8389 (ID: 1459972521469280401)
+2026-01-13 02:34:07,096 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-13 02:34:07,619 - src.bot.client - ERROR - Failed to sync commands: object of type 'NoneType' has no len()
+2026-01-13 02:34:27,318 - src.bot.client - INFO - Shutting down bot...
+2026-01-13 02:34:27,318 - __main__ - INFO - Application shutdown complete
+2026-01-13 02:34:27,319 - __main__ - INFO - Shutdown requested
+2026-01-13 02:35:32,539 - __main__ - INFO - ======================================================================
+2026-01-13 02:35:32,539 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-13 02:35:32,539 - __main__ - INFO - ======================================================================
+2026-01-13 02:35:32,539 - __main__ - INFO - Transcription Provider: WHISPER
+2026-01-13 02:35:32,539 - __main__ - INFO - Whisper Model: large-v3
+2026-01-13 02:35:32,539 - __main__ - INFO - Whisper Device: cuda
+2026-01-13 02:35:32,539 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-13 02:35:32,539 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-13 02:35:32,539 - __main__ - INFO - Database: localhost:5433/discord_analyzer
+2026-01-13 02:35:32,539 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-13 02:35:32,539 - __main__ - INFO - Session Timeout: 300s
+2026-01-13 02:35:32,539 - __main__ - INFO - Log Level: INFO
+2026-01-13 02:35:32,539 - __main__ - INFO - Command Prefix: !
+2026-01-13 02:35:32,539 - __main__ - INFO - Features:
+2026-01-13 02:35:32,539 - __main__ - INFO -   - Transcription: True
+2026-01-13 02:35:32,541 - __main__ - INFO -   - Message Logging: True
+2026-01-13 02:35:32,541 - __main__ - INFO -   - Session Tracking: True
+2026-01-13 02:35:32,541 - __main__ - INFO - ======================================================================
+2026-01-13 02:35:32,542 - __main__ - INFO - Setting up database...
+2026-01-13 02:35:32,615 - __main__ - INFO - Database setup complete
+2026-01-13 02:35:32,616 - __main__ - INFO - Creating dependencies...
+2026-01-13 02:35:32,616 - src.providers.whisper_provider - INFO - Initializing Whisper model: large-v3 on cuda with float16
+2026-01-13 02:35:35,487 - src.providers.whisper_provider - INFO - Whisper model loaded successfully
+2026-01-13 02:35:35,487 - __main__ - INFO - Using Whisper transcription provider
+2026-01-13 02:35:35,487 - __main__ - INFO - Initializing vector database...
+2026-01-13 02:35:38,176 - src.providers.embedding_provider - INFO - Loading embedding model: all-MiniLM-L6-v2
+2026-01-13 02:35:38,176 - src.providers.embedding_provider - INFO - Using device: cuda
+2026-01-13 02:35:38,177 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-01-13 02:35:39,124 - src.providers.embedding_provider - INFO - Embedding model loaded: all-MiniLM-L6-v2 (dim=384)
+2026-01-13 02:35:39,204 - httpx - INFO - HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2026-01-13 02:35:39,211 - httpx - INFO - HTTP Request: GET http://localhost:6333/collections "HTTP/1.1 200 OK"
+2026-01-13 02:35:39,212 - src.providers.qdrant_provider - INFO - Collection already exists: utterances
+2026-01-13 02:35:39,212 - src.providers.qdrant_provider - INFO - Qdrant provider initialized: localhost:6333/utterances
+2026-01-13 02:35:39,212 - src.services.vector_service - INFO - Vector service initialized and enabled
+2026-01-13 02:35:39,212 - __main__ - INFO - Vector database initialized successfully
+2026-01-13 02:35:39,213 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x0000022C0D3DEB10>
+2026-01-13 02:35:39,214 - __main__ - INFO - Voice control commands enabled
+2026-01-13 02:35:39,215 - __main__ - INFO - Semantic commands enabled
+2026-01-13 02:35:39,216 - __main__ - INFO - Dependencies created
+2026-01-13 02:35:39,216 - __main__ - INFO - Starting bot...
+2026-01-13 02:35:39,216 - discord.client - INFO - logging in using static token
+2026-01-13 02:35:39,668 - discord.gateway - INFO - Shard ID None has sent the IDENTIFY payload.
+2026-01-13 02:35:39,768 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-d-swq3",{"micros":70473,"calls":["id_created",{"micros":665,"calls":[]},"session_lookup_time",{"micros":202,"calls":[]},"session_lookup_finished",{"micros":9,"calls":[]},"discord-sessions-prd-2-135",{"micros":69327,"calls":["start_session",{"micros":62779,"calls":["discord-api-rpc-5858fd7d6c-thjk2",{"micros":33757,"calls":["get_user",{"micros":8503},"get_guilds",{"micros":2182},"send_scheduled_deletion_message",{"micros":12},"guild_join_requests",{"micros":389},"authorized_ip_coro",{"micros":7},"pending_payments",{"micros":703},"apex_experiments",{"micros":23031},"user_activities",{"micros":4},"played_application_ids",{"micros":3},"linked_users",{"micros":2},"ad_personalization_toggles_disabled",{"micros":2}]}]},"starting_guild_connect",{"micros":63,"calls":[]},"presence_started",{"micros":463,"calls":[]},"guilds_started",{"micros":80,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":5915,"calls":[]},"connect_finished",{"micros":5928,"calls":[]},"build_ready",{"micros":11,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: bf7220b84f0525a2635113b3271ea5bb).
+2026-01-13 02:35:41,884 - src.bot.client - INFO - Logged in as CreepyBot#8389 (ID: 1459972521469280401)
+2026-01-13 02:35:41,885 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-13 02:35:42,442 - src.bot.client - INFO - Synced 25 slash commands
+2026-01-13 02:36:35,632 - src.bot.client - INFO - Current recording channels: []
+2026-01-13 02:36:35,633 - src.bot.client - INFO - Attempting to start recording for channel: General
+2026-01-13 02:36:35,633 - src.bot.client - INFO - Connecting to voice channel General
+2026-01-13 02:36:35,633 - discord.voice_client - INFO - Connecting to voice...
+2026-01-13 02:36:35,633 - discord.voice_client - INFO - Starting voice handshake... (connection attempt 1)
+2026-01-13 02:36:35,735 - discord.voice_client - INFO - Voice handshake complete. Endpoint found c-atl06-a00c34c2.discord.media:443
+2026-01-13 02:36:35,895 - discord.gateway - INFO - selected the voice protocol for use (aead_xchacha20_poly1305_rtpsize)
+2026-01-13 02:36:35,924 - discord.gateway - INFO - received secret key for voice connection
+2026-01-13 02:36:35,924 - src.bot.client - INFO - Successfully connected to voice channel General
+2026-01-13 02:36:35,924 - src.bot.client - INFO - Created audio sink for channel General
+2026-01-13 02:36:35,924 - src.bot.client - INFO - Calling vc.start_recording()
+2026-01-13 02:36:35,926 - src.bot.client - INFO - Started recording channel: General
+2026-01-13 02:36:35,946 - src.services.session_manager - INFO - Started session 8c39e747-5193-41d7-8a82-31a3a7d9c7a2 for channel General (733522367623725101)
+2026-01-13 02:36:35,959 - src.services.session_manager - INFO - Added participant soviet_jesus (139496479852068864) to session 8c39e747-5193-41d7-8a82-31a3a7d9c7a2
+2026-01-13 02:36:57,555 - faster_whisper - INFO - Processing audio with duration 00:04.060
+2026-01-13 02:36:57,823 - src.repositories.utterance_repo - INFO - Successfully created utterance #8 for user soviet_jesus (139496479852068864)
+2026-01-13 02:36:57,823 - src.services.transcription - INFO - Transcribed utterance #8: soviet_jesus: "Yeah...." (0.43 confidence)
+2026-01-13 02:36:57,944 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-13 02:37:16,726 - faster_whisper - INFO - Processing audio with duration 00:19.160
+2026-01-13 02:37:17,027 - src.repositories.utterance_repo - INFO - Successfully created utterance #9 for user soviet_jesus (139496479852068864)
+2026-01-13 02:37:17,027 - src.services.transcription - INFO - Transcribed utterance #9: soviet_jesus: "I do not like green eggs and ham, Sam, I am...." (0.84 confidence)
+2026-01-13 02:37:17,050 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-13 02:37:22,120 - faster_whisper - INFO - Processing audio with duration 00:05.400
+2026-01-13 02:37:22,376 - src.repositories.utterance_repo - INFO - Successfully created utterance #10 for user soviet_jesus (139496479852068864)
+2026-01-13 02:37:22,376 - src.services.transcription - INFO - Transcribed utterance #10: soviet_jesus: "Yes...." (0.51 confidence)
+2026-01-13 02:37:22,392 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-13 02:37:25,655 - faster_whisper - INFO - Processing audio with duration 00:03.540
+2026-01-13 02:37:25,830 - src.repositories.utterance_repo - INFO - Successfully created utterance #11 for user soviet_jesus (139496479852068864)
+2026-01-13 02:37:25,830 - src.services.transcription - INFO - Transcribed utterance #11: soviet_jesus: "No...." (0.67 confidence)
+2026-01-13 02:37:25,842 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-13 02:37:28,550 - src.bot.client - INFO - soviet_jesus left General
+2026-01-13 02:37:28,550 - faster_whisper - INFO - Processing audio with duration 00:00.560
+2026-01-13 02:37:28,830 - src.repositories.utterance_repo - INFO - Successfully created utterance #12 for user soviet_jesus (139496479852068864)
+2026-01-13 02:37:28,831 - src.services.transcription - INFO - Transcribed utterance #12: soviet_jesus: "Potato...." (0.57 confidence)
+2026-01-13 02:37:28,842 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-13 02:37:28,868 - src.services.session_manager - INFO - Removed participant 139496479852068864 from session 8c39e747-5193-41d7-8a82-31a3a7d9c7a2
+2026-01-13 02:37:28,868 - src.services.session_manager - INFO - Remaining participants in session 8c39e747-5193-41d7-8a82-31a3a7d9c7a2: set()
+2026-01-13 02:37:28,868 - src.services.session_manager - INFO - No participants left in session 8c39e747-5193-41d7-8a82-31a3a7d9c7a2, ending session
+2026-01-13 02:37:28,875 - src.services.session_manager - INFO - Ended session 8c39e747-5193-41d7-8a82-31a3a7d9c7a2 with status ended
+2026-01-13 02:37:28,875 - src.bot.client - INFO - Remaining members in General: ['CreepyBot']
+2026-01-13 02:37:28,875 - src.bot.client - INFO - Remaining member IDs: [1459972521469280401]
+2026-01-13 02:37:28,875 - src.bot.client - INFO - Bot user ID: 1459972521469280401
+2026-01-13 02:37:28,875 - src.bot.client - INFO - Bot in channel: True
+2026-01-13 02:37:28,875 - src.bot.client - INFO - Member count: 1
+2026-01-13 02:37:28,875 - src.bot.client - INFO - Channel General is empty except for bot, stopping recording
+2026-01-13 02:37:28,875 - src.bot.client - INFO - Attempting to stop recording for channel: General
+2026-01-13 02:37:28,875 - src.bot.client - INFO - Voice client found: True
+2026-01-13 02:37:28,875 - src.bot.client - INFO - Voice client connected: True
+2026-01-13 02:37:28,875 - src.bot.client - INFO - Stopping recording on voice client
+2026-01-13 02:37:28,875 - src.bot.client - INFO - Disconnecting from voice channel
+2026-01-13 02:37:28,876 - discord.voice_client - INFO - Disconnecting from voice normally, close code 1000.
+2026-01-13 02:37:28,880 - src.bot.client - INFO - Recording callback called for channel General
+2026-01-13 02:37:28,904 - discord.voice_client - INFO - The voice handshake is being terminated for Channel ID 733522367623725101 (Guild ID 733522367141249066)
+2026-01-13 02:37:28,904 - src.bot.client - INFO - Successfully disconnected from voice channel
+2026-01-13 02:37:28,904 - src.bot.client - INFO - Stopped recording channel: General
+2026-01-13 02:37:48,897 - src.bot.client - INFO - Shutting down bot...
+2026-01-13 02:37:48,898 - __main__ - INFO - Application shutdown complete
+2026-01-13 02:37:48,899 - __main__ - INFO - Shutdown requested
+2026-01-13 02:42:00,894 - __main__ - INFO - ======================================================================
+2026-01-13 02:42:00,894 - __main__ - INFO - Discord Social Analyzer Starting
+2026-01-13 02:42:00,895 - __main__ - INFO - ======================================================================
+2026-01-13 02:42:00,895 - __main__ - INFO - Transcription Provider: WHISPER
+2026-01-13 02:42:00,895 - __main__ - INFO - Whisper Model: large-v3
+2026-01-13 02:42:00,895 - __main__ - INFO - Whisper Device: cuda
+2026-01-13 02:42:00,895 - __main__ - INFO - Whisper Compute Type: float16
+2026-01-13 02:42:00,895 - __main__ - INFO - Whisper VAD Enabled: False
+2026-01-13 02:42:00,895 - __main__ - INFO - Database: localhost:5433/discord_analyzer
+2026-01-13 02:42:00,895 - __main__ - INFO - Audio Chunk Duration: 5s
+2026-01-13 02:42:00,895 - __main__ - INFO - Session Timeout: 300s
+2026-01-13 02:42:00,895 - __main__ - INFO - Log Level: INFO
+2026-01-13 02:42:00,895 - __main__ - INFO - Command Prefix: !
+2026-01-13 02:42:00,895 - __main__ - INFO - Features:
+2026-01-13 02:42:00,895 - __main__ - INFO -   - Transcription: True
+2026-01-13 02:42:00,895 - __main__ - INFO -   - Message Logging: True
+2026-01-13 02:42:00,895 - __main__ - INFO -   - Session Tracking: True
+2026-01-13 02:42:00,895 - __main__ - INFO - ======================================================================
+2026-01-13 02:42:00,896 - __main__ - INFO - Setting up database...
+2026-01-13 02:42:01,070 - __main__ - INFO - Database setup complete
+2026-01-13 02:42:01,070 - __main__ - INFO - Creating dependencies...
+2026-01-13 02:42:01,070 - src.providers.whisper_provider - INFO - Initializing Whisper model: large-v3 on cuda with float16
+2026-01-13 02:42:15,250 - src.providers.whisper_provider - INFO - Whisper model loaded successfully
+2026-01-13 02:42:15,250 - __main__ - INFO - Using Whisper transcription provider
+2026-01-13 02:42:15,250 - __main__ - INFO - Initializing vector database...
+2026-01-13 02:42:23,038 - src.providers.embedding_provider - INFO - Loading embedding model: all-MiniLM-L6-v2
+2026-01-13 02:42:23,039 - src.providers.embedding_provider - INFO - Using device: cuda
+2026-01-13 02:42:23,040 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-01-13 02:42:24,261 - src.providers.embedding_provider - INFO - Embedding model loaded: all-MiniLM-L6-v2 (dim=384)
+2026-01-13 02:42:24,383 - httpx - INFO - HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2026-01-13 02:42:24,390 - httpx - INFO - HTTP Request: GET http://localhost:6333/collections "HTTP/1.1 200 OK"
+2026-01-13 02:42:24,391 - src.providers.qdrant_provider - INFO - Collection already exists: utterances
+2026-01-13 02:42:24,391 - src.providers.qdrant_provider - INFO - Qdrant provider initialized: localhost:6333/utterances
+2026-01-13 02:42:24,391 - src.services.vector_service - INFO - Vector service initialized and enabled
+2026-01-13 02:42:24,391 - __main__ - INFO - Vector database initialized successfully
+2026-01-13 02:42:24,391 - __main__ - INFO - Bot created successfully: <src.bot.client.DiscordBot object at 0x000001DC0DE62A10>
+2026-01-13 02:42:24,393 - __main__ - INFO - Voice control commands enabled
+2026-01-13 02:42:24,396 - __main__ - INFO - Semantic commands enabled
+2026-01-13 02:42:24,396 - __main__ - INFO - Dependencies created
+2026-01-13 02:42:24,396 - __main__ - INFO - Starting bot...
+2026-01-13 02:42:24,396 - discord.client - INFO - logging in using static token
+2026-01-13 02:42:35,803 - discord.gateway - INFO - Shard ID None has sent the IDENTIFY payload.
+2026-01-13 02:42:35,949 - discord.gateway - INFO - Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-b-5m5m",{"micros":119833,"calls":["id_created",{"micros":546,"calls":[]},"session_lookup_time",{"micros":279,"calls":[]},"session_lookup_finished",{"micros":16,"calls":[]},"discord-sessions-prd-2-73",{"micros":117629,"calls":["start_session",{"micros":86657,"calls":["discord-api-rpc-5858fd7d6c-btpd4",{"micros":38205,"calls":["get_user",{"micros":6712},"get_guilds",{"micros":2297},"send_scheduled_deletion_message",{"micros":25},"guild_join_requests",{"micros":611},"authorized_ip_coro",{"micros":9},"pending_payments",{"micros":2122},"apex_experiments",{"micros":38619},"user_activities",{"micros":7},"played_application_ids",{"micros":10},"linked_users",{"micros":3},"ad_personalization_toggles_disabled",{"micros":3}]}]},"starting_guild_connect",{"micros":61,"calls":[]},"presence_started",{"micros":9969,"calls":[]},"guilds_started",{"micros":52,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":20862,"calls":[]},"connect_finished",{"micros":20875,"calls":[]},"build_ready",{"micros":12,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 5cea5380c63162e8aeaed5af933c2a0a).
+2026-01-13 02:42:38,067 - src.bot.client - INFO - Logged in as CreepyBot#8389 (ID: 1459972521469280401)
+2026-01-13 02:42:38,067 - src.bot.client - INFO - Connected to 1 guilds
+2026-01-13 02:42:38,487 - src.bot.client - INFO - Synced 25 slash commands
+2026-01-13 02:42:49,314 - src.bot.client - INFO - Current recording channels: []
+2026-01-13 02:42:49,314 - src.bot.client - INFO - Attempting to start recording for channel: General
+2026-01-13 02:42:49,314 - src.bot.client - INFO - Connecting to voice channel General
+2026-01-13 02:42:49,315 - discord.voice_client - INFO - Connecting to voice...
+2026-01-13 02:42:49,315 - discord.voice_client - INFO - Starting voice handshake... (connection attempt 1)
+2026-01-13 02:42:49,428 - discord.voice_client - INFO - Voice handshake complete. Endpoint found c-atl01-6cad477d.discord.media:2087
+2026-01-13 02:42:49,590 - discord.gateway - INFO - selected the voice protocol for use (aead_xchacha20_poly1305_rtpsize)
+2026-01-13 02:42:49,620 - discord.gateway - INFO - received secret key for voice connection
+2026-01-13 02:42:49,620 - src.bot.client - INFO - Successfully connected to voice channel General
+2026-01-13 02:42:49,620 - src.bot.client - INFO - Created audio sink for channel General
+2026-01-13 02:42:49,621 - src.bot.client - INFO - Calling vc.start_recording()
+2026-01-13 02:42:49,622 - src.bot.client - INFO - Started recording channel: General
+2026-01-13 02:42:49,644 - src.services.session_manager - INFO - Started session 28b3ab34-87f5-4483-9214-975f0925d456 for channel General (733522367623725101)
+2026-01-13 02:42:49,672 - src.services.session_manager - INFO - Added participant soviet_jesus (139496479852068864) to session 28b3ab34-87f5-4483-9214-975f0925d456
+2026-01-13 02:42:55,648 - discord.opus - INFO - error has happened in opus_decode
+2026-01-13 02:42:55,648 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-13 02:42:55,671 - discord.opus - INFO - error has happened in opus_decode
+2026-01-13 02:42:55,671 - discord.opus - INFO - "corrupted stream" has happened
+2026-01-13 02:42:58,192 - faster_whisper - INFO - Processing audio with duration 00:05.000
+2026-01-13 02:42:58,779 - src.repositories.utterance_repo - INFO - Successfully created utterance #13 for user soviet_jesus (139496479852068864)
+2026-01-13 02:42:58,779 - src.services.transcription - INFO - Transcribed utterance #13: soviet_jesus: "talking for five seconds one two three four five..." (0.76 confidence)
+2026-01-13 02:42:58,901 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-13 02:43:10,379 - faster_whisper - INFO - Processing audio with duration 00:12.180
+2026-01-13 02:43:10,793 - src.repositories.utterance_repo - INFO - Successfully created utterance #14 for user soviet_jesus (139496479852068864)
+2026-01-13 02:43:10,794 - src.services.transcription - INFO - Transcribed utterance #14: soviet_jesus: "Thank you...." (0.41 confidence)
+2026-01-13 02:43:10,804 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-13 02:43:22,838 - faster_whisper - INFO - Processing audio with duration 00:12.460
+2026-01-13 02:43:23,197 - src.repositories.utterance_repo - INFO - Successfully created utterance #15 for user soviet_jesus (139496479852068864)
+2026-01-13 02:43:23,197 - src.services.transcription - INFO - Transcribed utterance #15: soviet_jesus: "It would appear the issue is stale buffers...." (0.74 confidence)
+2026-01-13 02:43:23,211 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-13 02:43:31,769 - src.bot.client - INFO - Attempting to stop recording for channel: General
+2026-01-13 02:43:31,769 - src.bot.client - INFO - Voice client found: True
+2026-01-13 02:43:31,769 - src.bot.client - INFO - Voice client connected: True
+2026-01-13 02:43:31,769 - src.bot.client - INFO - Stopping recording on voice client
+2026-01-13 02:43:31,769 - src.bot.client - INFO - Disconnecting from voice channel
+2026-01-13 02:43:31,769 - discord.voice_client - INFO - Disconnecting from voice normally, close code 1000.
+2026-01-13 02:43:31,783 - src.bot.client - INFO - Recording callback called for channel General
+2026-01-13 02:43:31,798 - discord.voice_client - INFO - The voice handshake is being terminated for Channel ID 733522367623725101 (Guild ID 733522367141249066)
+2026-01-13 02:43:31,798 - src.bot.client - INFO - Successfully disconnected from voice channel
+2026-01-13 02:43:31,799 - faster_whisper - INFO - Processing audio with duration 00:00.500
+2026-01-13 02:43:32,133 - src.repositories.utterance_repo - INFO - Successfully created utterance #16 for user soviet_jesus (139496479852068864)
+2026-01-13 02:43:32,133 - src.services.transcription - INFO - Transcribed utterance #16: soviet_jesus: "Yep...." (0.75 confidence)
+2026-01-13 02:43:32,144 - httpx - INFO - HTTP Request: PUT http://localhost:6333/collections/utterances/points?wait=true "HTTP/1.1 200 OK"
+2026-01-13 02:43:32,145 - src.bot.client - INFO - Stopped recording channel: General
+2026-01-13 02:47:00,578 - src.bot.client - INFO - Shutting down bot...
+2026-01-13 02:47:00,583 - __main__ - INFO - Application shutdown complete
+2026-01-13 02:47:00,584 - __main__ - INFO - Shutdown requested

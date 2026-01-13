@@ -1,5 +1,6 @@
 from discord.ext import commands
 import discord
+from discord import ApplicationContext, Option
 from datetime import datetime, timedelta
 import logging
 
@@ -25,12 +26,20 @@ class AnalysisCommands(commands.Cog):
         self.utterance_repo = utterance_repo
         self.message_repo = message_repo
     
-    @commands.command(name='stats')
-    async def session_stats(self, ctx: commands.Context, session_index: int = 1):
-        """
-        Get statistics for a session.
-        Usage: !stats [session_number]
-        """
+    @discord.slash_command(
+        name="stats",
+        description="View session statistics"
+    )
+    async def session_stats(
+        self,
+        ctx: ApplicationContext,
+        session_number: Option(
+            int,
+            description="Session number (1 = most recent)",
+            required=False,
+            default=1
+        )
+    ):
         try:
             # Get recent sessions for this channel
             channel_id = ctx.channel.id
@@ -50,18 +59,18 @@ class AnalysisCommands(commands.Cog):
                     sessions.extend(self.session_repo.get_sessions_by_channel(vc.id, limit=5))
                 
                 if not sessions:
-                    await ctx.send("No sessions found for this server.")
+                    await ctx.respond("No sessions found for this server.")
                     return
                 
                 sessions.sort(key=lambda s: s.started_at, reverse=True)
             else:
                 sessions = self.session_repo.get_sessions_by_channel(voice_channel_id, limit=10)
             
-            if session_index > len(sessions):
-                await ctx.send(f"Only {len(sessions)} sessions available.")
+            if session_number > len(sessions):
+                await ctx.respond(f"Only {len(sessions)} sessions available.")
                 return
             
-            session = sessions[session_index - 1]
+            session = sessions[session_number - 1]
             
             # Get conversation stats
             stats = self.utterance_repo.get_conversation_stats(session.session_id)
@@ -109,18 +118,32 @@ class AnalysisCommands(commands.Cog):
                     inline=False
                 )
             
-            await ctx.send(embed=embed)
+            await ctx.respond(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in stats command: {e}", exc_info=True)
-            await ctx.send(f"Error retrieving stats: {str(e)}")
+            await ctx.respond(f"Error retrieving stats: {str(e)}")
     
-    @commands.command(name='transcript')
-    async def get_transcript(self, ctx: commands.Context, session_index: int = 1, limit: int = 50):
-        """
-        Get transcript of a session.
-        Usage: !transcript [session_number] [message_limit]
-        """
+    @discord.slash_command(
+        name="transcript",
+        description="Get conversation transcript"
+    )
+    async def get_transcript(
+        self,
+        ctx: ApplicationContext,
+        session_number: Option(
+            int,
+            description="Session number (1 = most recent)",
+            required=False,
+            default=1
+        ),
+        limit: Option(
+            int,
+            description="Maximum utterances to show",
+            required=False,
+            default=50
+        )
+    ):
         try:
             # Get sessions similar to stats command
             voice_channel_id = None
@@ -136,18 +159,18 @@ class AnalysisCommands(commands.Cog):
                     sessions.extend(self.session_repo.get_sessions_by_channel(vc.id, limit=5))
                 
                 if not sessions:
-                    await ctx.send("No sessions found.")
+                    await ctx.respond("No sessions found.")
                     return
                 
                 sessions.sort(key=lambda s: s.started_at, reverse=True)
             else:
                 sessions = self.session_repo.get_sessions_by_channel(voice_channel_id, limit=10)
             
-            if session_index > len(sessions):
-                await ctx.send(f"Only {len(sessions)} sessions available.")
+            if session_number > len(sessions):
+                await ctx.respond(f"Only {len(sessions)} sessions available.")
                 return
             
-            session = sessions[session_index - 1]
+            session = sessions[session_number - 1]
             
             # Get utterances
             utterances = self.utterance_repo.get_utterances_by_session(
@@ -156,7 +179,7 @@ class AnalysisCommands(commands.Cog):
             )
             
             if not utterances:
-                await ctx.send("No utterances found for this session.")
+                await ctx.respond("No utterances found for this session.")
                 return
             
             # Build transcript
@@ -182,30 +205,33 @@ class AnalysisCommands(commands.Cog):
                 if current_chunk:
                     chunks.append(current_chunk)
                 
-                await ctx.send(f"**Transcript for {session.channel_name}** (showing {len(utterances)} utterances):")
+                await ctx.respond(f"**Transcript for {session.channel_name}** (showing {len(utterances)} utterances):")
                 for chunk in chunks:
-                    await ctx.send(chunk)
+                    await ctx.followup.send(chunk)
             else:
-                await ctx.send(
+                await ctx.respond(
                     f"**Transcript for {session.channel_name}** "
                     f"(showing {len(utterances)} utterances):\n\n{transcript}"
                 )
             
         except Exception as e:
             logger.error(f"Error in transcript command: {e}", exc_info=True)
-            await ctx.send(f"Error retrieving transcript: {str(e)}")
+            await ctx.respond(f"Error retrieving transcript: {str(e)}")
     
-    @commands.command(name='search')
-    async def search_utterances(self, ctx: commands.Context, *, query: str):
-        """
-        Search utterances by text.
-        Usage: !search <query>
-        """
+    @discord.slash_command(
+        name="search",
+        description="Search utterances by text content"
+    )
+    async def search_utterances(
+        self,
+        ctx: ApplicationContext,
+        query: Option(str, description="Text to search for")
+    ):
         try:
             utterances = self.utterance_repo.search_utterances(query, limit=20)
             
             if not utterances:
-                await ctx.send(f"No results found for: {query}")
+                await ctx.respond(f"No results found for: {query}")
                 return
             
             embed = discord.Embed(
@@ -222,32 +248,32 @@ class AnalysisCommands(commands.Cog):
                     inline=False
                 )
             
-            await ctx.send(embed=embed)
+            await ctx.respond(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in search command: {e}", exc_info=True)
-            await ctx.send(f"Error searching: {str(e)}")
+            await ctx.respond(f"Error searching: {str(e)}")
     
-    @commands.command(name='sessions')
-    async def list_sessions(self, ctx: commands.Context, *args):
-        """
-        List recent sessions.
-        Usage: !sessions [limit] [--summary]
-        Add --summary flag to show session titles/recaps
-        """
-        # Parse arguments
-        limit = 10  # Default
-        show_summary = False
-        
-        for arg in args:
-            if arg == '--summary':
-                show_summary = True
-            else:
-                try:
-                    limit = int(arg)
-                except ValueError:
-                    await ctx.send(f"Invalid argument: {arg}. Use: !sessions [limit] [--summary]")
-                    return
+    @discord.slash_command(
+        name="sessions",
+        description="List recent sessions"
+    )
+    async def list_sessions(
+        self,
+        ctx: ApplicationContext,
+        limit: Option(
+            int,
+            description="Number of sessions to show",
+            required=False,
+            default=10
+        ),
+        show_summary: Option(
+            bool,
+            description="Include topic summaries",
+            required=False,
+            default=False
+        )
+    ):
         try:
             # Get all sessions from voice channels
             all_sessions = []
@@ -260,7 +286,7 @@ class AnalysisCommands(commands.Cog):
             all_sessions = all_sessions[:limit]
             
             if not all_sessions:
-                await ctx.send("No sessions found.")
+                await ctx.respond("No sessions found.")
                 return
             
             embed = discord.Embed(
@@ -291,11 +317,11 @@ class AnalysisCommands(commands.Cog):
                     inline=False
                 )
             
-            await ctx.send(embed=embed)
+            await ctx.respond(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in sessions command: {e}", exc_info=True)
-            await ctx.send(f"Error listing sessions: {str(e)}")
+            await ctx.respond(f"Error listing sessions: {str(e)}")
     
     def _generate_session_title(self, session_id: str) -> str:
         """Generate a brief title/summary for a session based on top keywords."""
@@ -336,40 +362,42 @@ class AnalysisCommands(commands.Cog):
             logger.error(f"Error generating session title: {e}")
             return "Discussion"
     
-    @commands.command(name='help_analyzer')
-    async def help_command(self, ctx: commands.Context):
-        """Show available commands."""
+    @discord.slash_command(
+        name="help",
+        description="Show available commands and usage"
+    )
+    async def help_command(self, ctx: ApplicationContext):
         embed = discord.Embed(
             title="Discord Social Analyzer - Commands",
-            description="Available commands for analyzing conversations",
+            description="Available slash commands for analyzing conversations",
             color=discord.Color.purple()
         )
         
         embed.add_field(
-            name="!stats [session_number]",
+            name="/stats [session_number]",
             value="Get statistics for a session (default: most recent)",
             inline=False
         )
         
         embed.add_field(
-            name="!transcript [session_number] [limit]",
+            name="/transcript [session_number] [limit]",
             value="Get transcript of a session",
             inline=False
         )
         
         embed.add_field(
-            name="!search <query>",
+            name="/search <query>",
             value="Search utterances by text content",
             inline=False
         )
         
         embed.add_field(
-            name="!sessions [limit]",
-            value="List recent sessions",
+            name="/sessions [limit] [show_summary]",
+            value="List recent sessions with optional topic summaries",
             inline=False
         )
         
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
 
 
 async def setup(bot: commands.Bot):

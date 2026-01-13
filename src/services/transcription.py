@@ -34,6 +34,8 @@ class AudioBuffer:
         """
         if not self.started_at:
             self.started_at = datetime.utcnow()
+            # Initialize last_audio_at on first audio chunk
+            self.last_audio_at = datetime.utcnow()
         
         self.audio_data.append(audio)
         

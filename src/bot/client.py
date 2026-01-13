@@ -1,16 +1,12 @@
 import discord
 from discord.ext import commands
-import discord.sinks
+import asyncio
 import numpy as np
 import logging
-from typing import Optional
-from datetime import datetime
-import asyncio
 
 from src.services.transcription import TranscriptionService
 from src.services.session_manager import SessionManager
 from src.repositories.message_repo import MessageRepository
-from src.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -111,7 +107,6 @@ class DiscordBot(commands.Bot):
         intents.members = True
         
         super().__init__(
-            command_prefix=settings.command_prefix,
             intents=intents
         )
         
@@ -134,6 +129,15 @@ class DiscordBot(commands.Bot):
         """Called when bot is connected and ready."""
         logger.info(f'Logged in as {self.user} (ID: {self.user.id})')
         logger.info(f'Connected to {len(self.guilds)} guilds')
+        
+        # Sync slash commands
+        try:
+            await self.sync_commands()
+            # Count registered commands
+            command_count = len(self.pending_application_commands)
+            logger.info(f"Synced {command_count} slash commands")
+        except Exception as e:
+            logger.error(f"Failed to sync commands: {e}")
         
         # Set presence
         await self.change_presence(
@@ -173,9 +177,6 @@ class DiscordBot(commands.Bot):
             )
         except Exception as e:
             logger.error(f"Failed to store message: {e}")
-        
-        # Process commands
-        await self.process_commands(message)
     
     async def on_voice_state_update(
         self,

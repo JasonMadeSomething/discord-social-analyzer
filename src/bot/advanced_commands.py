@@ -1,5 +1,6 @@
 from discord.ext import commands
 import discord
+from discord import ApplicationContext, Option
 import logging
 
 from src.services.analyzer import ConversationAnalyzer
@@ -21,7 +22,7 @@ class DeepAnalysisCommands(commands.Cog):
         self.analyzer = analyzer
         self.session_repo = session_repo
     
-    def _get_session_id(self, ctx: commands.Context, session_index: int = 1) -> str:
+    def _get_session_id(self, ctx: ApplicationContext, session_index: int = 1) -> str:
         """Helper to get session ID from context."""
         for vc in ctx.guild.voice_channels:
             session_id = self.bot.session_manager.get_active_session(vc.id)
@@ -42,25 +43,39 @@ class DeepAnalysisCommands(commands.Cog):
         
         return sessions[session_index - 1].session_id
     
-    @commands.command(name='topics')
-    async def analyze_topics(self, ctx: commands.Context, session_index: int = 1, num_topics: int = 5):
-        """
-        Identify conversation topics with keyword clustering.
-        Usage: !topics [session_number] [num_topics]
-        """
+    @discord.slash_command(
+        name="topics",
+        description="Identify conversation topics with keyword clustering"
+    )
+    async def analyze_topics(
+        self,
+        ctx: ApplicationContext,
+        session_number: Option(
+            int,
+            description="Session number (1 = most recent)",
+            required=False,
+            default=1
+        ),
+        num_topics: Option(
+            int,
+            description="Number of topics to identify",
+            required=False,
+            default=5
+        )
+    ):
         try:
-            session_id = self._get_session_id(ctx, session_index)
+            session_id = self._get_session_id(ctx, session_number)
             
             if not session_id:
-                await ctx.send("No session found.")
+                await ctx.respond("No session found.")
                 return
             
-            await ctx.send("🔍 Analyzing conversation topics...")
+            await ctx.respond("🔍 Analyzing conversation topics...")
             
             result = self.analyzer.analyze_topics(session_id, num_topics)
             
             if not result['topics']:
-                await ctx.send("No topics found. The conversation may be too short.")
+                await ctx.followup.send("No topics found. The conversation may be too short.")
                 return
             
             embed = discord.Embed(
@@ -88,31 +103,39 @@ class DeepAnalysisCommands(commands.Cog):
                     inline=False
                 )
             
-            await ctx.send(embed=embed)
+            await ctx.followup.send(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in topics command: {e}", exc_info=True)
-            await ctx.send(f"Error analyzing topics: {str(e)}")
+            await ctx.followup.send(f"Error analyzing topics: {str(e)}")
     
-    @commands.command(name='recap')
-    async def conversation_recap(self, ctx: commands.Context, session_index: int = 1):
-        """
-        Generate a structured recap of the conversation.
-        Usage: !recap [session_number]
-        """
+    @discord.slash_command(
+        name="recap",
+        description="Generate a structured recap of the conversation"
+    )
+    async def conversation_recap(
+        self,
+        ctx: ApplicationContext,
+        session_number: Option(
+            int,
+            description="Session number (1 = most recent)",
+            required=False,
+            default=1
+        )
+    ):
         try:
-            session_id = self._get_session_id(ctx, session_index)
+            session_id = self._get_session_id(ctx, session_number)
             
             if not session_id:
-                await ctx.send("No session found.")
+                await ctx.respond("No session found.")
                 return
             
-            await ctx.send("📝 Generating conversation recap...")
+            await ctx.respond("📝 Generating conversation recap...")
             
             recap = self.analyzer.generate_recap(session_id)
             
             if 'error' in recap:
-                await ctx.send(f"Error: {recap['error']}")
+                await ctx.followup.send(f"Error: {recap['error']}")
                 return
             
             # Main embed
@@ -181,31 +204,39 @@ class DeepAnalysisCommands(commands.Cog):
                     inline=False
                 )
             
-            await ctx.send(embed=embed)
+            await ctx.followup.send(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in recap command: {e}", exc_info=True)
-            await ctx.send(f"Error generating recap: {str(e)}")
+            await ctx.followup.send(f"Error generating recap: {str(e)}")
     
-    @commands.command(name='dynamics')
-    async def social_dynamics(self, ctx: commands.Context, session_index: int = 1):
-        """
-        Analyze social dynamics and conversation flow.
-        Usage: !dynamics [session_number]
-        """
+    @discord.slash_command(
+        name="dynamics",
+        description="Analyze social dynamics and conversation flow"
+    )
+    async def social_dynamics(
+        self,
+        ctx: ApplicationContext,
+        session_number: Option(
+            int,
+            description="Session number (1 = most recent)",
+            required=False,
+            default=1
+        )
+    ):
         try:
-            session_id = self._get_session_id(ctx, session_index)
+            session_id = self._get_session_id(ctx, session_number)
             
             if not session_id:
-                await ctx.send("No session found.")
+                await ctx.respond("No session found.")
                 return
             
-            await ctx.send("🔬 Analyzing social dynamics...")
+            await ctx.respond("🔬 Analyzing social dynamics...")
             
             dynamics = self.analyzer.analyze_social_dynamics(session_id)
             
             if 'error' in dynamics:
-                await ctx.send(f"Error: {dynamics['error']}")
+                await ctx.followup.send(f"Error: {dynamics['error']}")
                 return
             
             embed = discord.Embed(
@@ -255,37 +286,45 @@ class DeepAnalysisCommands(commands.Cog):
                     inline=False
                 )
             
-            await ctx.send(embed=embed)
+            await ctx.followup.send(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in dynamics command: {e}", exc_info=True)
-            await ctx.send(f"Error analyzing dynamics: {str(e)}")
+            await ctx.followup.send(f"Error analyzing dynamics: {str(e)}")
     
-    @commands.command(name='influence')
-    async def influence_scores(self, ctx: commands.Context, session_index: int = 1):
-        """
-        Show influence scores - who drives the conversation.
-        Usage: !influence [session_number]
-        """
+    @discord.slash_command(
+        name="influence",
+        description="Show influence scores - who drives the conversation"
+    )
+    async def influence_scores(
+        self,
+        ctx: ApplicationContext,
+        session_number: Option(
+            int,
+            description="Session number (1 = most recent)",
+            required=False,
+            default=1
+        )
+    ):
         try:
-            session_id = self._get_session_id(ctx, session_index)
+            session_id = self._get_session_id(ctx, session_number)
             
             if not session_id:
-                await ctx.send("No session found.")
+                await ctx.respond("No session found.")
                 return
             
-            await ctx.send("📈 Calculating influence scores...")
+            await ctx.respond("📈 Calculating influence scores...")
             
             dynamics = self.analyzer.analyze_social_dynamics(session_id)
             
             if 'error' in dynamics:
-                await ctx.send(f"Error: {dynamics['error']}")
+                await ctx.followup.send(f"Error: {dynamics['error']}")
                 return
             
             influence = dynamics['influence_scores']
             
             if not influence:
-                await ctx.send("No influence data available.")
+                await ctx.followup.send("No influence data available.")
                 return
             
             embed = discord.Embed(
@@ -315,11 +354,11 @@ class DeepAnalysisCommands(commands.Cog):
             
             embed.set_footer(text="Higher scores = more influential in driving conversation")
             
-            await ctx.send(embed=embed)
+            await ctx.followup.send(embed=embed)
             
         except Exception as e:
             logger.error(f"Error in influence command: {e}", exc_info=True)
-            await ctx.send(f"Error calculating influence: {str(e)}")
+            await ctx.followup.send(f"Error calculating influence: {str(e)}")
 
 
 async def setup(bot: commands.Bot):

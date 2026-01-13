@@ -1,4 +1,5 @@
 import discord
+from discord import ApplicationContext, Option
 from discord.ext import commands
 from src.services.vector_service import VectorService
 from src.repositories.utterance_repo import UtteranceRepository
@@ -23,19 +24,20 @@ class SemanticCommands(commands.Cog):
         self.utterance_repo = utterance_repo
         self.session_repo = session_repo
     
-    @commands.command(name='semantic')
-    async def semantic_search(self, ctx, *, query: str):
-        """
-        Semantic search across all conversations.
-        
-        Usage: !semantic <query>
-        Example: !semantic machine learning algorithms
-        """
+    @discord.slash_command(
+        name="semantic",
+        description="Search conversations by meaning, not just keywords"
+    )
+    async def semantic_search(
+        self,
+        ctx: ApplicationContext,
+        query: Option(str, description="What to search for (by meaning)")
+    ):
         if not self.vector_service.enabled:
-            await ctx.send("❌ Semantic search is disabled. Set QDRANT_ENABLED=true in .env")
+            await ctx.respond("❌ Semantic search is disabled. Set QDRANT_ENABLED=true in .env")
             return
         
-        await ctx.send(f"🔍 Searching for: *{query}*...")
+        await ctx.respond(f"🔍 Searching for: *{query}*...")
         
         try:
             results = await self.vector_service.semantic_search(
@@ -44,7 +46,7 @@ class SemanticCommands(commands.Cog):
             )
             
             if not results:
-                await ctx.send("No results found.")
+                await ctx.followup.send("No results found.")
                 return
             
             embed = discord.Embed(
@@ -65,44 +67,41 @@ class SemanticCommands(commands.Cog):
                     inline=False
                 )
             
-            await ctx.send(embed=embed)
+            await ctx.followup.send(embed=embed)
             
         except Exception as e:
             logger.error(f"Semantic search failed: {e}", exc_info=True)
-            await ctx.send(f"❌ Search failed: {str(e)}")
+            await ctx.followup.send(f"❌ Search failed: {str(e)}")
     
-    @commands.command(name='topicmap')
-    async def show_topics(self, ctx):
-        """
-        Show common topics discussed (placeholder for future clustering).
-        
-        Usage: !topicmap
-        """
-        await ctx.send("📊 Topic clustering is not yet implemented. Coming soon!")
+    @discord.slash_command(
+        name="topicmap",
+        description="Show common topics discussed (coming soon)"
+    )
+    async def show_topics(self, ctx: ApplicationContext):
+        await ctx.respond("📊 Topic clustering is not yet implemented. Coming soon!")
     
-    @commands.command(name='similar')
-    async def find_similar(self, ctx, utterance_id: int):
-        """
-        Find utterances similar to a specific one.
-        
-        Usage: !similar <utterance_id>
-        Example: !similar 42
-        """
+    @discord.slash_command(
+        name="similar",
+        description="Find utterances similar to a specific one (coming soon)"
+    )
+    async def find_similar(
+        self,
+        ctx: ApplicationContext,
+        utterance_id: Option(int, description="ID of the utterance to find similar ones")
+    ):
         if not self.vector_service.enabled:
-            await ctx.send("❌ Semantic search is disabled.")
+            await ctx.respond("❌ Semantic search is disabled.")
             return
         
-        await ctx.send("🔍 Finding similar utterances is not yet fully implemented.")
+        await ctx.respond("🔍 Finding similar utterances is not yet fully implemented.")
     
-    @commands.command(name='vectorstats')
-    async def vector_stats(self, ctx):
-        """
-        Show vector database statistics.
-        
-        Usage: !vectorstats
-        """
+    @discord.slash_command(
+        name="vectorstats",
+        description="Show vector database statistics"
+    )
+    async def vector_stats(self, ctx: ApplicationContext):
         if not self.vector_service.enabled:
-            await ctx.send("❌ Vector database is disabled.")
+            await ctx.respond("❌ Vector database is disabled.")
             return
         
         try:
@@ -118,8 +117,8 @@ class SemanticCommands(commands.Cog):
             embed.add_field(name="Indexed Vectors", value=info.get('indexed_vectors_count', 'Unknown'), inline=True)
             embed.add_field(name="Points", value=info.get('points_count', 'Unknown'), inline=True)
             
-            await ctx.send(embed=embed)
+            await ctx.respond(embed=embed)
             
         except Exception as e:
             logger.error(f"Failed to get vector stats: {e}", exc_info=True)
-            await ctx.send(f"❌ Failed to get stats: {str(e)}")
+            await ctx.respond(f"❌ Failed to get stats: {str(e)}")
