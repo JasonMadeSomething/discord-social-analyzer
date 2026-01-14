@@ -122,13 +122,24 @@ class DiscordBot(commands.Bot):
         logger.info("Bot is setting up...")
         
         # Start background services
+        logger.info("Starting transcription service monitor...")
         await self.transcription_service.start_monitor()
+        logger.info("Starting session manager monitor...")
         await self.session_manager.start_timeout_monitor()
+        logger.info("Background services started")
     
     async def on_ready(self):
         """Called when bot is connected and ready."""
         logger.info(f'Logged in as {self.user} (ID: {self.user.id})')
         logger.info(f'Connected to {len(self.guilds)} guilds')
+        
+        # Start background services (if not already started)
+        if not self.transcription_service._monitor_task:
+            logger.info("Starting transcription service monitor...")
+            await self.transcription_service.start_monitor()
+            logger.info("Starting session manager monitor...")
+            await self.session_manager.start_timeout_monitor()
+            logger.info("Background services started")
         
         # Sync slash commands
         try:

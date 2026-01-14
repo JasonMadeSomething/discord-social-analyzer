@@ -24,13 +24,13 @@ class AudioBuffer:
         self.started_at: Optional[datetime] = None
         self.last_audio_at: Optional[datetime] = None
     
-    def add_audio(self, audio: np.ndarray, vad_threshold: float = 0.01) -> None:
+    def add_audio(self, audio: np.ndarray, vad_threshold: float = 0.1) -> None:
         """
         Add audio chunk to buffer with voice activity detection.
         
         Args:
             audio: Audio data to add
-            vad_threshold: RMS threshold for voice activity detection (default: 0.01)
+            vad_threshold: RMS threshold for voice activity detection (default: 0.1)
         """
         if not self.started_at:
             self.started_at = datetime.utcnow()
@@ -46,6 +46,9 @@ class AudioBuffer:
         if rms > vad_threshold:
             # Audio contains speech, update timestamp
             self.last_audio_at = datetime.utcnow()
+            logger.debug(f"Voice activity detected: RMS={rms:.6f} (threshold={vad_threshold})")
+        else:
+            logger.debug(f"Silence detected: RMS={rms:.6f} (threshold={vad_threshold})")
         # If RMS is below threshold, don't update timestamp
         # This allows silence detection to work properly
     
@@ -152,6 +155,9 @@ class TranscriptionService:
         # Record activity in session
         self.session_manager.record_activity(channel_id)
         
+        # Log current buffer state
+        logger.debug(f"Buffer state for {username}: duration={buffer.duration():.2f}s, is_ready={buffer.is_ready()}, is_stale={buffer.is_stale()}")
+        
         # Check if buffer is ready for transcription (reached chunk duration)
         if buffer.is_ready():
             logger.debug(f"Buffer ready for transcription for user {username} ({user_id}) - duration: {buffer.duration():.2f}s")
@@ -194,6 +200,12 @@ class TranscriptionService:
             duration = len(audio) / settings.audio_sample_rate
             if duration < settings.audio_min_duration:
                 logger.debug(f"Skipping short audio clip ({duration:.2f}s)")
+                return
+            
+            # Skip if audio is mostly silence (low RMS)
+            overall_rms = np.sqrt(np.mean(audio ** 2))
+            if overall_rms < 0.02:
+                logger.debug(f"Skipping silent buffer (RMS={overall_rms:.6f}) for user {user_id}")
                 return
             
             try:
@@ -278,6 +290,7 @@ class TranscriptionService:
     
     async def _monitor_loop(self) -> None:
         """Monitor loop to check for stale buffers."""
+        logger.info("Buffer monitor loop started")
         while True:
             try:
                 await asyncio.sleep(1)  # Check every second
@@ -287,15 +300,27 @@ class TranscriptionService:
                     for user_id in list(self._buffers[channel_id].keys()):
                         buffer = self._buffers[channel_id][user_id]
                         
+                        # Debug: Log buffer state
+                        if len(buffer.audio_data) > 0:
+                            silence_duration = (datetime.utcnow() - buffer.last_audio_at).total_seconds() if buffer.last_audio_at else 0
+                            logger.debug(
+                                f"Monitor check - user {user_id}: "
+                                f"duration={buffer.duration():.2f}s, "
+                                f"silence={silence_duration:.2f}s, "
+                                f"is_stale={buffer.is_stale()}, "
+                                f"chunks={len(buffer.audio_data)}"
+                            )
+                        
                         # If buffer is stale and has data, process it
                         if buffer.is_stale() and len(buffer.audio_data) > 0:
-                            logger.debug(f"Processing stale buffer for user {user_id}")
+                            logger.debug(f"Processing stale buffer for user {user_id} in channel {channel_id}")
                             await self._process_buffer(channel_id, user_id)
                             
             except asyncio.CancelledError:
+                logger.info("Buffer monitor loop cancelled")
                 break
             except Exception as e:
-                logger.error(f"Error in buffer monitor: {e}")
+                logger.error(f"Error in buffer monitor: {e}", exc_info=True)
                 await asyncio.sleep(1)
     
     async def swap_provider(self, new_provider: ITranscriptionProvider) -> dict:
