@@ -2,11 +2,12 @@ from sqlalchemy import (
     Column, Integer, String, Float, DateTime, ForeignKey, 
     BigInteger, Text, Index, Enum as SQLEnum, Boolean
 )
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
+import uuid
 
 Base = declarative_base()
 
@@ -76,6 +77,7 @@ class UtteranceModel(Base):
     ended_at = Column(DateTime, nullable=False)
     confidence = Column(Float, nullable=False)
     audio_duration = Column(Float, nullable=False)  # seconds
+    sequence_num = Column(Integer, nullable=False)  # Sequential order within session
     prosody = Column(JSONB, nullable=True)  # Prosodic features extracted from audio
     
     # Relationships
@@ -108,4 +110,44 @@ class MessageModel(Base):
     __table_args__ = (
         Index('idx_message_channel_time', 'channel_id', 'timestamp'),
         Index('idx_message_user_time', 'user_id', 'timestamp'),
+    )
+
+
+class SpeakerAliasModel(Base):
+    """Speaker alias mapping (reference data)."""
+    __tablename__ = "speaker_aliases"
+    
+    id = Column(Integer, primary_key=True)
+    user_id = Column(BigInteger, nullable=False, index=True)
+    alias = Column(Text, nullable=False)
+    alias_type = Column(String(20), nullable=False)  # username, display_name, nickname, mention
+    confidence = Column(Float, default=1.0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    created_by = Column(BigInteger, nullable=True)
+    
+    __table_args__ = (
+        Index('idx_speaker_aliases_user_id', 'user_id'),
+        Index('idx_speaker_aliases_alias', 'alias'),
+    )
+
+
+class EnrichmentQueueModel(Base):
+    """Enrichment task queue (operational)."""
+    __tablename__ = "enrichment_queue"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    target_type = Column(String(20), nullable=False)  # idea, exchange, session
+    target_id = Column(Text, nullable=False)
+    task_type = Column(String(50), nullable=False)
+    priority = Column(Integer, nullable=False, default=2)
+    status = Column(String(20), nullable=False, default='pending')
+    created_at = Column(DateTime, default=datetime.utcnow)
+    started_at = Column(DateTime, nullable=True)
+    completed_at = Column(DateTime, nullable=True)
+    attempts = Column(Integer, default=0)
+    error = Column(Text, nullable=True)
+    
+    __table_args__ = (
+        Index('idx_enrichment_queue_status_priority', 'status', 'priority', 'created_at'),
+        Index('idx_enrichment_queue_target', 'target_type', 'target_id'),
     )

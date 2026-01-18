@@ -12,8 +12,10 @@ logger = logging.getLogger(__name__)
 class UtteranceRepository:
     """Repository for utterance-related database operations."""
     
-    def __init__(self, session_factory: scoped_session):
+    def __init__(self, session_factory: scoped_session, speaker_alias_repo=None, boundary_detector=None):
         self.session_factory = session_factory
+        self.speaker_alias_repo = speaker_alias_repo
+        self.boundary_detector = boundary_detector
     
     @property
     def db(self) -> Session:
@@ -43,6 +45,9 @@ class UtteranceRepository:
         logger.debug(f"Text: \"{text[:100]}...\" Duration: {audio_duration:.2f}s Confidence: {confidence:.2f}")
         
         try:
+            # Calculate sequence_num
+            sequence_num = self._get_next_sequence_num(session_id)
+            
             utterance = UtteranceModel(
                 session_id=session_id,
                 user_id=user_id,
@@ -53,12 +58,45 @@ class UtteranceRepository:
                 ended_at=ended_at,
                 confidence=confidence,
                 audio_duration=audio_duration,
+                sequence_num=sequence_num,
                 prosody=prosody
             )
             self.db.add(utterance)
             self.db.commit()
             self.db.refresh(utterance)
             logger.info(f"Successfully created utterance #{utterance.id} for user {username} ({user_id})")
+            
+            # Auto-seed speaker aliases
+            if self.speaker_alias_repo:
+                self.speaker_alias_repo.auto_seed_from_utterance(
+                    user_id, username, display_name
+                )
+            
+            # Trigger boundary detection (async) - schedule for later execution
+            if self.boundary_detector:
+                import asyncio
+                try:
+                    loop = asyncio.get_event_loop()
+                    if loop.is_running():
+                        logger.debug(f"Triggering boundary detection for utterance {utterance.id}")
+                        # Check for speaker change boundary
+                        asyncio.create_task(
+                            self.boundary_detector.check_speaker_change(
+                                session_id, user_id, started_at
+                            )
+                        )
+                        # Process current utterance
+                        asyncio.create_task(
+                            self.boundary_detector.on_utterance_created(utterance)
+                        )
+                    else:
+                        logger.warning("Event loop exists but not running, skipping boundary detection")
+                except RuntimeError as e:
+                    # No event loop running, skip boundary detection
+                    logger.warning(f"No event loop running, skipping boundary detection: {e}")
+            else:
+                logger.warning("Boundary detector not initialized!")
+            
             return utterance.id
         except Exception as e:
             logger.error(f"Failed to create utterance: {e}", exc_info=True)
@@ -169,6 +207,36 @@ class UtteranceRepository:
             }
             for s in stats
         ]
+    
+    def get_utterance_by_id(self, utterance_id: int):
+        """
+        Get utterance by ID.
+        
+        Args:
+            utterance_id: Utterance ID
+            
+        Returns:
+            UtteranceModel if found, None otherwise
+        """
+        return self.db.query(UtteranceModel).filter(
+            UtteranceModel.id == utterance_id
+        ).first()
+    
+    def _get_next_sequence_num(self, session_id: str) -> int:
+        """
+        Get next sequence number for session.
+        
+        Args:
+            session_id: Session ID
+            
+        Returns:
+            Next sequence number (1-based)
+        """
+        from sqlalchemy import func
+        max_seq = self.db.query(func.max(UtteranceModel.sequence_num)).filter(
+            UtteranceModel.session_id == session_id
+        ).scalar()
+        return (max_seq or 0) + 1
     
     def _to_domain(self, utterance: UtteranceModel) -> Utterance:
         """Convert database model to domain model."""

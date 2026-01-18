@@ -90,6 +90,31 @@ services:
       retries: 5
       start_period: 5s
 
+  # Ollama LLM Service
+  ollama:
+    image: ollama/ollama:latest
+    container_name: discord-analyzer-ollama
+    restart: unless-stopped
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - discord-analyzer-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
 networks:
   discord-analyzer-network:
     driver: bridge
@@ -104,3 +129,5 @@ volumes:
     name: discord-analyzer-pgadmin-data
   redis_data:
     name: discord-analyzer-redis-data
+  ollama_data:
+    name: discord-analyzer-ollama-data

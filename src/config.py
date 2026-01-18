@@ -128,6 +128,30 @@ class Settings(BaseSettings):
     feature_session_tracking: bool = True
     
     # =========================================================================
+    # Ollama Configuration (LLM Service)
+    # =========================================================================
+    ollama_base_url: str = "http://localhost:11434"
+    ollama_chat_model: str = "phi3:mini"
+    ollama_embed_model: str = "nomic-embed-text"
+    
+    # =========================================================================
+    # Enrichment Engine Configuration
+    # =========================================================================
+    enrichment_worker_enabled: bool = True
+    enrichment_batch_size: int = 10
+    enrichment_poll_interval_sec: int = 5
+    
+    # Idea boundary detection
+    idea_boundary_silence_ms: int = 800
+    idea_max_duration_sec: int = 60
+    
+    # Response mapping
+    response_mapping_time_threshold_ms: int = 5000
+    
+    # Exchange clustering
+    exchange_gap_threshold_ms: int = 30000
+    
+    # =========================================================================
     # Security Configuration
     # =========================================================================
     # Allowed user IDs (empty = all users allowed)

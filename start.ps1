@@ -138,6 +138,21 @@ Show-Info "Waiting for services to be ready..."
 Start-Sleep -Seconds 15
 Show-Success "Services should be ready"
 
+# Initialize Ollama models for enrichment engine
+Write-Host ""
+Show-Info "Initializing Ollama models for enrichment engine..."
+try {
+    & .\scripts\init_ollama.ps1
+    if ($LASTEXITCODE -eq 0) {
+        Show-Success "Ollama models ready"
+    } else {
+        Show-Warning "Ollama initialization had issues, enrichment engine may not work"
+    }
+} catch {
+    Show-Warning "Could not initialize Ollama models: $_"
+    Show-Info "Enrichment engine will be disabled"
+}
+
 # Set Python executable path
 $pythonExe = if (Test-Path "venv\Scripts\python.exe") { "venv\Scripts\python.exe" } else { "python" }
 

@@ -73,9 +73,42 @@ class Application:
         """Create all dependencies with dependency injection."""
         logger.info("Creating dependencies...")
         
+        # Ollama client for enrichment engine
+        from src.services.ollama_client import OllamaClient
+        ollama_client = OllamaClient()
+        
+        # Qdrant client for analysis layer
+        from qdrant_client import QdrantClient
+        qdrant_client = QdrantClient(
+            host=settings.qdrant_host,
+            port=settings.qdrant_port
+        )
+        
+        # Enrichment repositories
+        from src.repositories.speaker_alias_repo import SpeakerAliasRepository
+        from src.repositories.enrichment_queue_repo import EnrichmentQueueRepository
+        from src.repositories.idea_repo import IdeaRepository
+        from src.repositories.exchange_repo import ExchangeRepository
+        
+        speaker_alias_repo = SpeakerAliasRepository(self.Session)
+        enrichment_queue_repo = EnrichmentQueueRepository(self.Session)
+        idea_repo = IdeaRepository(qdrant_client, ollama_client)
+        exchange_repo = ExchangeRepository(qdrant_client, ollama_client)
+        
+        # Boundary detector and model manager
+        from src.services.boundary_detector import BoundaryDetector
+        from src.services.enrichment.model_manager import ModelManager
+        
+        boundary_detector = BoundaryDetector(idea_repo, enrichment_queue_repo)
+        model_manager = ModelManager(ollama_client)
+        
         # Repositories (pass session factory instead of single session)
         session_repo = SessionRepository(self.Session)
-        utterance_repo = UtteranceRepository(self.Session)
+        utterance_repo = UtteranceRepository(
+            self.Session,
+            speaker_alias_repo=speaker_alias_repo,
+            boundary_detector=boundary_detector
+        )
         message_repo = MessageRepository(self.Session)
         
         # Services
@@ -193,6 +226,56 @@ class Application:
             bot.add_cog(semantic_commands_cog)
             logger.info("Semantic commands enabled")
         
+        # Add alias commands for enrichment engine
+        from src.bot.alias_commands import AliasCommands
+        alias_commands_cog = AliasCommands(
+            bot=bot,
+            speaker_alias_repo=speaker_alias_repo
+        )
+        bot.add_cog(alias_commands_cog)
+        logger.info("Alias commands enabled")
+        
+        # Add diagnostic commands for enrichment engine
+        from src.bot.diagnostic_commands import DiagnosticCommands
+        diagnostic_commands_cog = DiagnosticCommands(
+            bot=bot,
+            idea_repo=idea_repo,
+            exchange_repo=exchange_repo,
+            enrichment_queue_repo=enrichment_queue_repo,
+            speaker_alias_repo=speaker_alias_repo,
+            session_repo=session_repo
+        )
+        bot.add_cog(diagnostic_commands_cog)
+        logger.info("Diagnostic commands enabled")
+        
+        # Task handlers for enrichment engine
+        from src.services.enrichment.handlers.alias_detection import AliasDetectionHandler
+        from src.services.enrichment.handlers.prosody_interpretation import ProsodyInterpretationHandler
+        from src.services.enrichment.handlers.response_mapping import ResponseMappingHandler
+        from src.services.enrichment.handlers.intent_keywords import IntentKeywordsHandler
+        
+        handlers = [
+            AliasDetectionHandler(speaker_alias_repo, idea_repo),
+            ProsodyInterpretationHandler(idea_repo, utterance_repo),
+            ResponseMappingHandler(idea_repo),
+            IntentKeywordsHandler(idea_repo, ollama_client)
+        ]
+        
+        # Enrichment worker
+        from src.services.enrichment.worker import EnrichmentWorker
+        worker = EnrichmentWorker(
+            queue_repo=enrichment_queue_repo,
+            handlers=handlers,
+            model_manager=model_manager,
+            idea_repo=idea_repo,
+            exchange_repo=exchange_repo
+        )
+        
+        # Store worker for later initialization
+        self.enrichment_worker = worker
+        self.idea_repo = idea_repo
+        self.exchange_repo = exchange_repo
+        
         self.bot = bot
         
         logger.info("Dependencies created")
@@ -207,14 +290,32 @@ class Application:
             # Create dependencies
             bot = await self.create_dependencies()
             
+            # Initialize Qdrant collections
+            logger.info("Initializing Qdrant collections...")
+            await self.idea_repo.initialize_collection()
+            await self.exchange_repo.initialize_collection()
+            logger.info("Qdrant collections initialized")
+            
+            # Start enrichment worker
+            if settings.enrichment_worker_enabled:
+                asyncio.create_task(self.enrichment_worker.start())
+                logger.info("Enrichment worker started")
+            else:
+                logger.info("Enrichment worker disabled (set ENRICHMENT_WORKER_ENABLED=true to enable)")
+            
             # Run bot
             logger.info("Starting bot...")
-            await bot.start(settings.discord_token)
+            try:
+                await bot.start(settings.discord_token)
+            except Exception as bot_error:
+                logger.error(f"Bot failed to start: {bot_error}", exc_info=True)
+                raise
             
         except KeyboardInterrupt:
             logger.info("Received keyboard interrupt")
         except Exception as e:
             logger.error(f"Error running application: {e}", exc_info=True)
+            raise
         finally:
             # Cleanup
             if self.bot:

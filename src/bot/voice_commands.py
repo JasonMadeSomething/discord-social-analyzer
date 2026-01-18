@@ -76,19 +76,20 @@ class VoiceCommands(commands.Cog):
         description="Dismiss the bot from the voice channel and stop recording"
     )
     async def dismiss(self, ctx: ApplicationContext):
+        # Defer immediately to prevent interaction timeout
+        await ctx.defer()
+        
         if not ctx.guild.voice_client:
-            await ctx.respond("❌ I'm not in a voice channel!")
+            await ctx.followup.send("❌ I'm not in a voice channel!")
             return
         
         channel = ctx.guild.voice_client.channel
         
         try:
-            await ctx.respond(f"👋 Leaving {channel.name}...")
-            
             # Stop recording and disconnect
             await self.bot._stop_recording(channel)
             
-            await ctx.followup.send("✅ Recording stopped and left the voice channel.")
+            await ctx.followup.send(f"✅ Left {channel.name} and stopped recording.")
             
         except Exception as e:
             logger.error(f"Failed to leave voice channel: {e}", exc_info=True)

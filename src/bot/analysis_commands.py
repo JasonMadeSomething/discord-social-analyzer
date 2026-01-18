@@ -74,10 +74,11 @@ class AdvancedAnalysisCommands(commands.Cog):
             summary = self.analyzer.generate_session_summary(session_id)
             
             # Create embed
+            from datetime import datetime
             embed = discord.Embed(
                 title=f"📊 Analysis: {summary['channel_name']}",
                 color=discord.Color.purple(),
-                timestamp=ctx.message.created_at
+                timestamp=datetime.utcnow()
             )
             
             # Basic info
