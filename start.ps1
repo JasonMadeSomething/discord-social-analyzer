@@ -55,6 +55,19 @@ try {
     exit 1
 }
 
+# Check virtual environment
+Show-Info "Checking Python environment..."
+if (Test-Path "venv\Scripts\Activate.ps1") {
+    & "venv\Scripts\Activate.ps1"
+    Show-Success "Virtual environment activated"
+} else {
+    Show-Warning "Virtual environment not found at venv\"
+    Show-Info "Creating virtual environment..."
+    python -m venv venv
+    & "venv\Scripts\Activate.ps1"
+    Show-Success "Virtual environment created and activated"
+}
+
 # Check .env
 Show-Info "Checking configuration..."
 if (-not (Test-Path ".env")) {
@@ -125,12 +138,15 @@ Show-Info "Waiting for services to be ready..."
 Start-Sleep -Seconds 15
 Show-Success "Services should be ready"
 
+# Set Python executable path
+$pythonExe = if (Test-Path "venv\Scripts\python.exe") { "venv\Scripts\python.exe" } else { "python" }
+
 # Migrations
 if (-not $SkipMigrations) {
     Write-Host ""
     Show-Info "Running database migrations..."
     try {
-        python -c "from src.config import settings; from src.models.database import Base, engine; Base.metadata.create_all(engine)" 2>&1 | Out-Null
+        & $pythonExe -c "from src.config import settings; from src.models.database import Base, engine; Base.metadata.create_all(engine)" 2>&1 | Out-Null
         if ($LASTEXITCODE -eq 0) {
             Show-Success "Database ready"
         } else {
@@ -159,7 +175,7 @@ Show-Info "Starting Discord bot (Provider: $Provider)..."
 Write-Host ""
 
 try {
-    python main.py --provider $Provider
+    & $pythonExe main.py --provider $Provider
 } catch {
     Show-Error "Bot crashed: $_"
 } finally {

@@ -8,6 +8,7 @@ from collections import defaultdict
 from src.providers.interfaces import ITranscriptionProvider
 from src.repositories.utterance_repo import UtteranceRepository
 from src.services.session_manager import SessionManager
+from src.services.prosody_extractor import ProsodyExtractor
 from src.config import settings
 
 logger = logging.getLogger(__name__)
@@ -107,6 +108,9 @@ class TranscriptionService:
         self.utterance_repo = utterance_repo
         self.session_manager = session_manager
         self.vector_service = vector_service
+        
+        # Prosody extractor for audio feature analysis
+        self.prosody_extractor = ProsodyExtractor(target_sample_rate=16000)
         
         # Audio buffers per user per channel
         self._buffers: Dict[int, Dict[int, AudioBuffer]] = defaultdict(dict)  # channel_id -> {user_id -> buffer}
@@ -209,6 +213,19 @@ class TranscriptionService:
                 return
             
             try:
+                # Extract prosody features (run in parallel with transcription preparation)
+                prosody_features = None
+                try:
+                    prosody_features = await asyncio.get_event_loop().run_in_executor(
+                        None,
+                        self.prosody_extractor.extract_features,
+                        audio,
+                        settings.audio_sample_rate
+                    )
+                    logger.debug(f"Extracted prosody features for user {user_id}")
+                except Exception as e:
+                    logger.warning(f"Prosody extraction failed for user {user_id}: {e}")
+                
                 # Transcribe
                 logger.debug(f"Transcribing {duration:.2f}s of audio for user {user_id}")
                 result = await self.transcription_provider.transcribe(
@@ -221,7 +238,7 @@ class TranscriptionService:
                     logger.debug("Transcription resulted in empty text")
                     return
                 
-                # Store utterance
+                # Store utterance with prosody features
                 utterance_id = self.utterance_repo.create_utterance(
                     session_id=session_id,
                     user_id=user_id,
@@ -231,7 +248,8 @@ class TranscriptionService:
                     started_at=started_at,
                     ended_at=ended_at,
                     confidence=result.confidence,
-                    audio_duration=duration
+                    audio_duration=duration,
+                    prosody=prosody_features
                 )
                 
                 logger.info(

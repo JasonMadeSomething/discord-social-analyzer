@@ -2,6 +2,7 @@ from sqlalchemy import (
     Column, Integer, String, Float, DateTime, ForeignKey, 
     BigInteger, Text, Index, Enum as SQLEnum, Boolean
 )
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -75,6 +76,7 @@ class UtteranceModel(Base):
     ended_at = Column(DateTime, nullable=False)
     confidence = Column(Float, nullable=False)
     audio_duration = Column(Float, nullable=False)  # seconds
+    prosody = Column(JSONB, nullable=True)  # Prosodic features extracted from audio
     
     # Relationships
     session = relationship("SessionModel", back_populates="utterances")
@@ -82,6 +84,7 @@ class UtteranceModel(Base):
     __table_args__ = (
         Index('idx_utterance_user_time', 'user_id', 'started_at'),
         Index('idx_utterance_session_time', 'session_id', 'started_at'),
+        Index('idx_utterances_prosody', 'prosody', postgresql_using='gin'),
     )
 
 

@@ -30,7 +30,8 @@ class UtteranceRepository:
         started_at: datetime,
         ended_at: datetime,
         confidence: float,
-        audio_duration: float
+        audio_duration: float,
+        prosody: Optional[dict] = None
     ) -> int:
         """
         Create a new utterance.
@@ -51,7 +52,8 @@ class UtteranceRepository:
                 started_at=started_at,
                 ended_at=ended_at,
                 confidence=confidence,
-                audio_duration=audio_duration
+                audio_duration=audio_duration,
+                prosody=prosody
             )
             self.db.add(utterance)
             self.db.commit()
